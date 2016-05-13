@@ -1,12 +1,17 @@
 defmodule Pocketeer.Mixfile do
   use Mix.Project
 
+  @version "0.0.1"
+
   def project do
     [ app: :pocketeer,
-      version: "0.0.1",
+      name: "Pocketeer",
+      version: @version,
       elixir: "~> 1.2",
       deps: deps,
       package: package,
+      description: description,
+      elixirc_paths: elixirc_paths(Mix.env),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
     ]
@@ -17,6 +22,10 @@ defmodule Pocketeer.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger, :httpotion]]
+  end
+
+  def description do
+    "An Elixir client for the Pocket API"
   end
 
   # Dependencies can be Hex packages:
@@ -46,4 +55,7 @@ defmodule Pocketeer.Mixfile do
       maintainers: [ "Sebastian Ziebell" ]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end
