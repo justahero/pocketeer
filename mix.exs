@@ -29,6 +29,7 @@ defmodule Pocketeer.Mixfile do
   defp deps do
     [
       {:httpotion, "~> 2.2.0"},
+      {:poison, "~> 2.1.0"},
       {:mock, "~> 0.1.3", only: :test},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: [:dev, :test, :docs]}
