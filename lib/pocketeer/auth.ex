@@ -1,4 +1,4 @@
-require IEx
+# require IEx
 
 defmodule Pocketeer.Auth do
   @request_token_url "https://getpocket.com/v3/oauth/request"
@@ -23,7 +23,7 @@ defmodule Pocketeer.Auth do
   """
   @spec get_request_token(String.t, String.t) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get_request_token(consumer_key, redirect_uri, state \\ nil) do
-    body = ~s({"consumer_key": #{consumer_key}, "redirect_uri": #{redirect_uri}})
+    body = ~s({"consumer_key": "#{consumer_key}", "redirect_uri": "#{redirect_uri}"})
     response = HTTPotion.post(@request_token_url, [body: body, headers: @request_headers])
     # IEx.pry
     {:ok, {}}
