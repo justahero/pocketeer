@@ -1,6 +1,6 @@
 # Pocketeer
 
-**TODO: Add description**
+A client library for the Pocket API written in Elixir.
 
 ## Installation
 
@@ -17,4 +17,3 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
         def application do
           [applications: [:pocketeer]]
         end
-
