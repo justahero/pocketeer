@@ -18,10 +18,17 @@ defmodule Pocketeer.Auth do
   Returns `HTTP.Response` if request succeeds
   Returns `Pocketeer.HTTPError` if a request fails
   """
-  @spec get_request_token(String.t, String.t) :: {:ok, Response.t} | {:error, HTTPError.t}
+  @spec get_request_token(String.t, String.t) :: {:ok, map} | {:error, HTTPError.t}
   def get_request_token(consumer_key, redirect_uri) do
     body = ~s({"consumer_key": "#{consumer_key}", "redirect_uri": "#{redirect_uri}"})
     HTTPotion.post(@request_token_url, [body: body, headers: @request_headers])
+    |> handle_response
+  end
+
+  @spec get_access_token(String.t, String.t) :: {:ok, map} | {:error, HTTPError.t}
+  def get_access_token(consumer_key, request_token) do
+    body = ~s({"consumer_key": "#{consumer_key}", "request_token": "#{request_token}"})
+    HTTPotion.post(@authorization_url, [body: body, headers: @request_headers])
     |> handle_response
   end
 
