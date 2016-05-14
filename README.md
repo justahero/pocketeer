@@ -29,25 +29,26 @@ Once the application is registered the consumer key is displayed on the [My Appl
 
 To use the client, first it's necessary to authorize the application. For more details check the [Authorization process](https://getpocket.com/developer/docs/authentication) on Pocket.
 
-First a request token is fetched from Pocket
+  1. Fetch a request token from Pocket
 
-```elixir
-iex> {:ok, code} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
-{:ok, {code: "abcd"}}
-```
+    ```elixir
+    iex> {:ok, code} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
+    {:ok, {code: "abcd"}}
+    ```
 
-Once the user receives the request token, redirect the user to authorization page.
-A helper function can be used to get the right url.
+  2. Once the user receives the request token, redirect the user to the authorization page.
+     The user might accept or decline the authorization request on Pocket.
 
-```elixir
-iex> Pocketeer.Auth.authorize_url("abcd", "http://yoursite.com")
-"https://getpocket.com/v3/oauth/authorize?request_token=abcd&redirect_uri=http%3A%2F%2Fyoursite.com"
-```
+    ```elixir
+    # a helper function can be used to construct the url.
+    iex> Pocketeer.Auth.authorize_url("abcd", "http://yoursite.com")
+    "https://getpocket.com/v3/oauth/authorize?request_token=abcd&redirect_uri=http%3A%2F%2Fyoursite.com"
+    ```
 
-When the user accepts or declines the request Pocket redirect to the given url. The last step is to fetch an access token.
+  3. Get an access token after the user accepts the authorization.
 
-```elixir
-iex> {code: request_token} = code
-iex> Pocketeer.Auth.get_access_token(consumer_key, request_token)
-{:ok, {code: "access_token"}}
-```
+    ```elixir
+    iex> {code: request_token} = code
+    iex> Pocketeer.Auth.get_access_token(consumer_key, request_token)
+    {:ok, {code: "access_token"}}
+    ```
