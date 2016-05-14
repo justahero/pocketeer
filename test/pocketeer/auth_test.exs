@@ -21,7 +21,7 @@ defmodule Pocketeer.AuthTest do
       [post: fn(_url), _headers ->
         %HTTPotion.Response{status_code: 200, body: body, headers: []} end] do
 
-      Pocketeer.Auth.get_request_token("123", "localhost")
+      {:error, _} = Pocketeer.Auth.get_request_token("123", "localhost")
       assert called HTTPotion.post("https://getpocket.com/v3/oauth/request", :_)
     end
   end

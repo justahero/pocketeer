@@ -19,10 +19,10 @@ defmodule Pocketeer.Auth do
 
   Raises `Pocketeer.HTTPError` if request fails
   """
-  @spec get_request_token(String.t, String.t) :: {:ok, Response.t} | {:error, HTTPError.t}
+  @spec get_request_token(String.t, String.t) :: {:ok, Pocketeer.Response.t} | {:error, HTTPError.t}
   def get_request_token(consumer_key, redirect_uri, state \\ nil) do
     body = ~s({"consumer_key": "#{consumer_key}", "redirect_uri": "#{redirect_uri}"})
-    response = HTTPotion.post(@request_token_url, [body: body, headers: @request_headers])
+    HTTPotion.post(@request_token_url, [body: body, headers: @request_headers])
     {:ok, {}}
   end
 end
