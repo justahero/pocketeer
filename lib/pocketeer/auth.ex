@@ -12,13 +12,8 @@ defmodule Pocketeer.Auth do
 
   ## Parameters:
 
-    - consumer_key: The consumer key given by Pocket
-
-  ## Examples:
-
-      # iex> consumer_key = Application.get_env(:pocketeer, :consumer_key, "123")
-      # iex> Pocketeer.Auth.get_request_token(consumer_key, "localhost")
-      # {:ok, {}}
+    - consumer_key: The consumer key used from the Pocket API
+    - redirect_uri: URL to redirect when the authorization process has been completed
 
   Returns `HTTP.Response` if request succeeds
   Returns `Pocketeer.HTTPError` if a request fails
