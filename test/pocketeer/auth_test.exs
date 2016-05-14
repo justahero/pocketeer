@@ -4,7 +4,7 @@ defmodule Pocketeer.AuthTest do
 
   import Mock
 
-  test "returns OK response" do
+  test "returns OK response with body" do
     doc = ~s({"code": "123456", "status": null})
     with_mock HTTPotion,
       [post: fn(_url), _headers ->
@@ -24,6 +24,17 @@ defmodule Pocketeer.AuthTest do
 
       {:error, error} = Pocketeer.Auth.get_request_token("123", "localhost")
       assert error.message == body
+      assert called HTTPotion.post("https://getpocket.com/v3/oauth/request", :_)
+    end
+  end
+
+  test "returns error message on HTTPError" do
+    with_mock HTTPotion,
+      [post: fn(_url), _headers ->
+        %HTTPotion.HTTPError{message: "econnrefused"} end] do
+
+      {:error, error} = Pocketeer.Auth.get_request_token("123", "invalid url")
+      assert error.message == "econnrefused"
       assert called HTTPotion.post("https://getpocket.com/v3/oauth/request", :_)
     end
   end
