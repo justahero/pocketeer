@@ -8,6 +8,21 @@ defmodule Pocketeer.Auth do
   alias Pocketeer.HTTPError
 
   @doc """
+  Returns the URL to authorize the application in the Pocket API
+
+  ## Parameters
+
+    - request_token: The request token to authorize the app with
+    - redirect_uri: The URL the user is redirected to after authorization
+
+  Returns the authorization URL with all parameters
+  """
+  @spec authorize_url(String.t, String.t) :: String.t
+  def authorize_url(request_token, redirect_uri) do
+    "#{@authorization_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
+  end
+
+  @doc """
   Sends a GET request to fetch a request token
 
   ## Parameters:
@@ -25,6 +40,20 @@ defmodule Pocketeer.Auth do
     |> handle_response
   end
 
+  @doc """
+  Requests an access token from the Pocket API.
+
+  The method requires the `request_token` fetched from `Pocketeer.Auth.get_request_token`
+  method.
+
+  ## Parameters
+
+    - consumer_key: The consumer key used from the Pocket API
+    - request_token: The request token to authorize the application
+
+  Returns `HTTP.Response` if request succeeds
+  Returns `Pocketeer.HTTPError` if a request fails
+  """
   @spec get_access_token(String.t, String.t) :: {:ok, map} | {:error, HTTPError.t}
   def get_access_token(consumer_key, request_token) do
     body = ~s({"consumer_key": "#{consumer_key}", "request_token": "#{request_token}"})
