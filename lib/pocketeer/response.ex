@@ -1,9 +1,22 @@
 defmodule Pocketeer.Response do
-  @type stats   :: integer
+  @type status  :: integer
+  @type headers :: map
   @type body    :: String.t
-  @type headers :: Array.t
 
-  defstruct status: nil,
-            body: "",
-            headers: []
+  @type t :: %__MODULE__{
+    status: status,
+    headers: headers,
+    body: body
+  }
+
+  defstruct status: nil, headers: %{}, body: nil
+
+  @doc false
+  def new(status, headers, body) do
+    %__MODULE__{
+      status: status,
+      headers: headers,
+      body: body
+    }
+  end
 end
