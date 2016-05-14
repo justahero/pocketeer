@@ -47,7 +47,7 @@ defmodule Pocketeer.AuthTest do
       {:ok, body} = Pocketeer.Auth.get_access_token("123", "abcd")
 
       assert body == %{access_token: "token", username: "pocket"}
-      assert called HTTPotion.post("https://getpocket.com/v3/uauth/authorize", :_)
+      assert called HTTPotion.post("https://getpocket.com/v3/oauth/authorize", :_)
     end
   end
 end

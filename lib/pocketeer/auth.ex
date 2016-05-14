@@ -1,6 +1,6 @@
 defmodule Pocketeer.Auth do
   @request_token_url "https://getpocket.com/v3/oauth/request"
-  @authorization_url "https://getpocket.com/v3/uauth/authorize"
+  @authorization_url "https://getpocket.com/v3/oauth/authorize"
 
   @request_headers [{"Content-Type", "application/json; charset=UTF-8"}, {"X-Accept", "application/json"}]
 
@@ -37,7 +37,7 @@ defmodule Pocketeer.Auth do
       %HTTPotion.Response{body: body, headers: headers, status_code: status} when status in 200..299 ->
         {:ok, Response.new(status, headers, body) |> process_body}
       %HTTPotion.Response{body: body, headers: headers, status_code: status} ->
-        {:error, %HTTPError{message: body}}
+        {:error, %HTTPError{message: parse_error_message(body, headers)}}
       %HTTPotion.HTTPError{message: message} ->
         {:error, %HTTPError{message: message}}
       _ ->
@@ -47,5 +47,14 @@ defmodule Pocketeer.Auth do
 
   defp process_body(response) do
     Poison.Parser.parse!(response.body, keys: :atoms!)
+  end
+
+  defp parse_error_message(body, headers) do
+    case headers[:'x-error'] do
+      nil ->
+        body
+      error ->
+        "#{body}, error"
+    end
   end
 end
