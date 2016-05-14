@@ -1,6 +1,7 @@
 defmodule Pocketeer.Auth do
   @request_token_url "https://getpocket.com/v3/oauth/request"
-  @authorization_url "https://getpocket.com/v3/oauth/authorize"
+  @access_token_url  "https://getpocket.com/v3/oauth/authorize"
+  @authorize_url     "https://getpocket.com/auth/authorize"
 
   @request_headers [{"Content-Type", "application/json; charset=UTF-8"}, {"X-Accept", "application/json"}]
 
@@ -19,9 +20,8 @@ defmodule Pocketeer.Auth do
   """
   @spec authorize_url(String.t, String.t) :: String.t
   def authorize_url(request_token, redirect_uri) do
-    "#{@authorization_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
+    "#{@authorize_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
   end
-
   @doc """
   Sends a GET request to fetch a request token
 
@@ -56,8 +56,8 @@ defmodule Pocketeer.Auth do
   """
   @spec get_access_token(String.t, String.t) :: {:ok, map} | {:error, HTTPError.t}
   def get_access_token(consumer_key, request_token) do
-    body = ~s({"consumer_key": "#{consumer_key}", "request_token": "#{request_token}"})
-    HTTPotion.post(@authorization_url, [body: body, headers: @request_headers])
+    body = ~s({"consumer_key": "#{consumer_key}", "code": "#{request_token}"})
+    HTTPotion.post(@access_token_url, [body: body, headers: @request_headers])
     |> handle_response
   end
 
@@ -75,15 +75,13 @@ defmodule Pocketeer.Auth do
   end
 
   defp process_body(response) do
-    Poison.Parser.parse!(response.body, keys: :atoms!)
+    Poison.Parser.parse!(response.body)
   end
 
   defp parse_error_message(body, headers) do
     case headers[:'x-error'] do
-      nil ->
-        body
-      error ->
-        "#{body}, error"
+      nil   -> body
+      error -> "#{body}, #{error}"
     end
   end
 end
