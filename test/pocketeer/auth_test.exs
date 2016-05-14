@@ -10,9 +10,8 @@ defmodule Pocketeer.AuthTest do
       [post: fn(_url), _headers ->
         %HTTPotion.Response{status_code: 200, body: doc, headers: []} end] do
 
-      {:ok, response} = Pocketeer.Auth.get_request_token("123", "localhost")
-      assert response.status == 200
-      # assert response.body == {code: 123456, status: nil}
+      {:ok, body} = Pocketeer.Auth.get_request_token("123", "localhost")
+      assert body == %{code: "123456", status: nil}
       assert called HTTPotion.post("https://getpocket.com/v3/oauth/request", :_)
     end
   end
@@ -23,8 +22,8 @@ defmodule Pocketeer.AuthTest do
       [post: fn(_url), _headers ->
         %HTTPotion.Response{status_code: 400, body: body, headers: []} end] do
 
-      {:error, response} = Pocketeer.Auth.get_request_token("123", "localhost")
-      assert response.message == body
+      {:error, error} = Pocketeer.Auth.get_request_token("123", "localhost")
+      assert error.message == body
       assert called HTTPotion.post("https://getpocket.com/v3/oauth/request", :_)
     end
   end

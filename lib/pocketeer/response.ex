@@ -20,3 +20,9 @@ defmodule Pocketeer.Response do
     }
   end
 end
+
+defimpl String.Chars, for: Pocketeer.Response do
+  def to_string(response) do
+    "Response #{response.status} - #{inspect(response.body)}"
+  end
+end

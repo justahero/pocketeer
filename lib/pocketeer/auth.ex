@@ -20,7 +20,8 @@ defmodule Pocketeer.Auth do
       # iex> Pocketeer.Auth.get_request_token(consumer_key, "localhost")
       # {:ok, {}}
 
-  Raises `Pocketeer.HTTPError` if request fails
+  Returns `HTTP.Response` if request succeeds
+  Returns `Pocketeer.HTTPError` if a request fails
   """
   @spec get_request_token(String.t, String.t) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get_request_token(consumer_key, redirect_uri) do
@@ -32,7 +33,7 @@ defmodule Pocketeer.Auth do
   defp handle_response(response) do
     case response do
       %HTTPotion.Response{body: body, headers: headers, status_code: status} when status in 200..299 ->
-        {:ok, Response.new(status, headers, body |> process_body)}
+        {:ok, Response.new(status, headers, body) |> process_body}
       %HTTPotion.Response{body: body, headers: headers, status_code: status} ->
         {:error, %HTTPError{message: body}}
       %HTTPotion.HTTPError{message: message} ->
@@ -42,7 +43,7 @@ defmodule Pocketeer.Auth do
     end
   end
 
-  defp process_body(body) do
-    body |> Poison.Parser.parse!
+  defp process_body(response) do
+    Poison.Parser.parse!(response.body, keys: :atoms!)
   end
 end
