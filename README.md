@@ -32,8 +32,10 @@ To use the client, first it's necessary to authorize the application. For more d
   1. Fetch a request token from Pocket
 
     ```elixir
-    iex> {:ok, code} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
-    {:ok, {code: "abcd"}}
+    iex> {:ok, body} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
+    {:ok, %{"code" => "abcd", "state" => nil}}
+    iex> request_token = body["code"]
+    "abcd"
     ```
 
   2. Once the user receives the request token, redirect the user to the authorization page.
@@ -48,7 +50,6 @@ To use the client, first it's necessary to authorize the application. For more d
   3. Get an access token after the user accepts the authorization.
 
     ```elixir
-    iex> {code: request_token} = code
     iex> Pocketeer.Auth.get_access_token(consumer_key, request_token)
-    {:ok, {code: "access_token"}}
+    {:ok, %{"access_token" => "efgh", "username" => "pocketuser"}}
     ```
