@@ -42,7 +42,6 @@ defmodule Pocketeer.Mixfile do
       {:httpotion, "~> 2.2.0"},
       {:poison, "~> 2.1.0"},
 
-      {:mock, "~> 0.1.3", only: :test},
       {:bypass, "~> 0.5.1", only: :test},
       {:excoveralls, "~> 0.5.4", only: :test},
 
