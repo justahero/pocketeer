@@ -35,21 +35,19 @@ defmodule Pocketeer.Client do
   end
 
   def new(options) do
-    IO.puts inspect(options)
-    %__MODULE__{
-      consumer_key: options.consumer_key,
-      access_token: options.access_token,
-      site: options.site
-    }
+    struct(__MODULE__, options)
   end
 
   def get(client) do
-    HTTPotion.post("#{client.site}/v3/get", [body: default_get_options, headers: @request_headers])
+    HTTPotion.post("#{client.site}/v3/get", [body: default_options(client), headers: @request_headers])
     |> handle_response
   end
 
-  defp default_get_options do
-    ""
+  defp default_options(client) do
+    %{
+      consumer_key: client.consumer_key,
+      access_token: client.access_token
+    } |> Poison.encode!
   end
 
   defp handle_response(response) do
