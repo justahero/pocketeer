@@ -19,4 +19,14 @@ defmodule Pocketeer.GetTest do
     {:ok, body} = Pocketeer.Get.get(client)
     assert Poison.Parser.parse!(body)
   end
+
+  test "get! raises on error", %{server: server, client: client} do
+    bypass server, "POST", "/v3/get", fn conn ->
+      Plug.Conn.resp(conn, 400, "400 Bad Request")
+    end
+
+    assert_raise Pocketeer.HTTPError, fn ->
+      Pocketeer.Get.get!(client)
+    end
+  end
 end
