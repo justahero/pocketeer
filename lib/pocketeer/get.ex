@@ -1,7 +1,49 @@
 defmodule Pocketeer.Get do
-  import Pocketeer.HTTPHandler
+  @moduledoc """
+  This module implements the Retrieve endpoint of the Pocket API and offers a few flavors
+  of access.
+  """
 
+  import Pocketeer.HTTPHandler
   alias Pocketeer.HTTPHandler
+
+  @type state       :: :unread | :archive | :all
+  @type favorite    :: :all | :unfavored | :favored
+  @type tag         :: :all | String.t | :untagged
+  @type contentType :: :all | :article | :video | :image
+  @type sort        :: :newest | :oldest | :title | :site
+  @type detailType  :: :simple | :complete
+  @type search      :: binary
+  @type domain      :: binary
+  @type since       :: number
+  @type count       :: number
+  @type offset      :: number
+
+  @type t :: %__MODULE__{
+    state:       state,
+    favorite:    favorite,
+    tag:         tag,
+    contentType: contentType,
+    sort:        sort,
+    detailType:  detailType,
+    search:      search,
+    domain:      domain,
+    since:       since,
+    count:       count,
+    offset:      offset
+  }
+
+  defstruct state: :unread,
+            favorite: :all,
+            tag: :all,
+            contentType: :all,
+            sort: :newest,
+            detailType: :simple,
+            search: nil,
+            domain: nil,
+            since: 0,
+            count: 10,
+            offset: 0
 
   def get(client, options \\ %{}) do
     HTTPotion.post("#{client.site}/v3/get", default_args(client, options))
