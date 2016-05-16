@@ -1,12 +1,9 @@
 defmodule Pocketeer.Auth do
-  @request_token_url "https://getpocket.com/v3/oauth/request"
-  @access_token_url  "https://getpocket.com/v3/oauth/authorize"
-  @authorize_url     "https://getpocket.com/auth/authorize"
-
-  @request_headers [{"Content-Type", "application/json; charset=UTF-8"}, {"X-Accept", "application/json"}]
+  import Pocketeer.HTTPHandler
 
   alias Pocketeer.Response
   alias Pocketeer.HTTPError
+  alias Pocketeer.HTTPHandler
 
   @doc """
   Returns the URL to authorize the application in the Pocket API
@@ -20,7 +17,7 @@ defmodule Pocketeer.Auth do
   """
   @spec authorize_url(String.t, String.t) :: String.t
   def authorize_url(request_token, redirect_uri) do
-    "#{@authorize_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
+    "#{authorize_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
   end
   @doc """
   Sends a GET request to fetch a request token
@@ -36,7 +33,7 @@ defmodule Pocketeer.Auth do
   @spec get_request_token(String.t, String.t) :: {:ok, map} | {:error, HTTPError.t}
   def get_request_token(consumer_key, redirect_uri) do
     body = ~s({"consumer_key": "#{consumer_key}", "redirect_uri": "#{redirect_uri}"})
-    HTTPotion.post(@request_token_url, [body: body, headers: @request_headers])
+    HTTPotion.post(request_token_url, [body: body, headers: request_headers])
     |> handle_response
   end
 
@@ -57,11 +54,28 @@ defmodule Pocketeer.Auth do
   @spec get_access_token(String.t, String.t) :: {:ok, map} | {:error, HTTPError.t}
   def get_access_token(consumer_key, request_token) do
     body = ~s({"consumer_key": "#{consumer_key}", "code": "#{request_token}"})
-    HTTPotion.post(@access_token_url, [body: body, headers: @request_headers])
+    HTTPotion.post(access_token_url, [body: body, headers: request_headers])
     |> handle_response
   end
 
+  def authorize_url do
+    "#{pocket_url}/auth/authorize"
+  end
+
+  defp access_token_url do
+    "#{pocket_url}/v3/oauth/authorize"
+  end
+
+  defp request_token_url do
+    "#{pocket_url}/v3/oauth/request"
+  end
+
+  defp pocket_url do
+    Application.get_env(:pocketeer, :pocket_url, "https://getpocket.com")
+  end
+
   defp handle_response(response) do
+    IO.puts inspect(response)
     case response do
       %HTTPotion.Response{body: body, headers: headers, status_code: status} when status in 200..299 ->
         {:ok, Response.new(status, headers, body) |> process_body}

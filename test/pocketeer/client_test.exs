@@ -1,5 +1,6 @@
 defmodule Pocketeer.ClientTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
+
   import Pocketeer.TestHelpers
 
   doctest Pocketeer.Client

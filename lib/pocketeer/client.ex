@@ -1,11 +1,9 @@
 defmodule Pocketeer.Client do
-  @request_headers [
-    {"Content-Type", "application/json; charset=UTF-8"},
-    {"X-Accept", "application/json"}
-  ]
+  import Pocketeer.HTTPHandler
 
   alias Pocketeer.Response
   alias Pocketeer.HTTPError
+  alias Pocketeer.HTTPHandler
 
   @type t :: %__MODULE__ {
     consumer_key: String.t,
@@ -39,7 +37,7 @@ defmodule Pocketeer.Client do
   end
 
   def get(client) do
-    HTTPotion.post("#{client.site}/v3/get", [body: default_options(client), headers: @request_headers])
+    HTTPotion.post("#{client.site}/v3/get", [body: default_options(client), headers: request_headers])
     |> handle_response
   end
 
