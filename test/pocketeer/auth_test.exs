@@ -7,8 +7,7 @@ defmodule Pocketeer.AuthTest do
 
   setup do
     Application.delete_env(:pocketeer, :pocket_url)
-    server = Bypass.open
-    {:ok, server: server}
+    {:ok, server: Bypass.open}
   end
 
   test "returns full authorization url" do

@@ -12,7 +12,6 @@ defmodule Pocketeer.HTTPHandler do
   end
 
   def handle_response(response) do
-    IO.puts inspect(response)
     case response do
       %HTTPotion.Response{body: body, headers: headers, status_code: status} when status in 200..299 ->
         {:ok, Response.new(status, headers, body) |> process_body}
