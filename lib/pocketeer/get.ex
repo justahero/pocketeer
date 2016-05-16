@@ -50,6 +50,21 @@ defmodule Pocketeer.Get do
     |> handle_response
   end
 
+  def get_favorites(client, options \\ %{}) do
+    options = Map.put(options, :favorite, :favored)
+    get(client, options)
+  end
+
+  def get_unread(client, options \\ %{}) do
+    options = Map.put(options, :state, :unread)
+    get(client, options)
+  end
+
+  def find(client, search, options \\ %{}) do
+    options = Map.put(options, :search, search)
+    get(client, options)
+  end
+
   def get!(client, options \\ %{}) do
     response = HTTPotion.post("#{client.site}/v3/get", default_args(client, options))
     |> handle_response
