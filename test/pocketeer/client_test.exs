@@ -1,15 +1,20 @@
 defmodule Pocketeer.ClientTest do
   use ExUnit.Case
-  import PathHelpers
+  import Pocketeer.TestHelpers
 
   doctest Pocketeer.Client
 
   setup do
-    client = Pocketeer.Client.new("1234", "abcd")
-    {:ok, client: client}
+    server = Bypass.open
+    client = build_client(%{site: bypass_server(server)})
+    {:ok, server: server, client: client}
   end
 
-  test "GET" do
-    {:ok, json} = load_json("retrieve_sample.json")
+  test "get", %{server: server, client: client} do
+    bypass server, "POST", "/v3/get", fn conn ->
+      json_response(conn, 200, "retrieve_sample.json")
+    end
+
+    {:ok, _json} = Pocketeer.Client.get(client)
   end
 end

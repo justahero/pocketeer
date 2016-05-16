@@ -44,7 +44,7 @@ defmodule Pocketeer.Client do
   end
 
   def get(client) do
-    HTTPotion.post(client.site, [body: default_get_options, headers: @request_headers])
+    HTTPotion.post("#{client.site}/v3/get", [body: default_get_options, headers: @request_headers])
     |> handle_response
   end
 

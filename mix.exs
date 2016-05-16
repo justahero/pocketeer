@@ -43,6 +43,7 @@ defmodule Pocketeer.Mixfile do
       {:poison, "~> 2.1.0"},
 
       {:mock, "~> 0.1.3", only: :test},
+      {:bypass, "~> 0.5.1", only: :test},
       {:excoveralls, "~> 0.5.4", only: :test},
 
       {:earmark, "~> 0.1", only: :dev},
