@@ -67,16 +67,14 @@ defmodule Pocketeer.Get do
   end
 
   def get!(client, options \\ %{}) do
-    response = HTTPotion.post("#{client.site}/v3/get", default_args(client, options))
-    |> handle_response
-    case response do
+    case get(client, options) do
       {:ok, body}      -> body
       {:error, reason} -> raise reason
     end
   end
 
   defp build_body(client, options) do
-    test = %{
+    %{
       consumer_key: client.consumer_key,
       access_token: client.access_token
     }

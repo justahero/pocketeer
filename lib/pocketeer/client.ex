@@ -21,6 +21,11 @@ defmodule Pocketeer.Client do
     - consumer_key: The consumer key received from the Pocket application page
     - access_token: The access token retrieved after successful authorization with Pocket
 
+  ## Examples
+
+      iex> Pocketeer.Client.new("1234", "abcd")
+      %Pocketeer.Client{access_token: "abcd", consumer_key: "1234", site: "https://getpocket.com"}
+
   """
   @spec new(String.t, String.t) :: t
   def new(consumer_key, access_token) do
