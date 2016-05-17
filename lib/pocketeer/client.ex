@@ -1,8 +1,4 @@
 defmodule Pocketeer.Client do
-  import Pocketeer.HTTPHandler
-
-  alias Pocketeer.HTTPHandler
-
   @type t :: %__MODULE__ {
     consumer_key: String.t,
     access_token: String.t,
@@ -21,6 +17,11 @@ defmodule Pocketeer.Client do
     - consumer_key: The consumer key received from the Pocket application page
     - access_token: The access token retrieved after successful authorization with Pocket
 
+  ## Examples
+
+      iex> Pocketeer.Client.new("1234", "abcd")
+      %Pocketeer.Client{access_token: "abcd", consumer_key: "1234", site: "https://getpocket.com"}
+
   """
   @spec new(String.t, String.t) :: t
   def new(consumer_key, access_token) do
@@ -32,17 +33,5 @@ defmodule Pocketeer.Client do
 
   def new(options) do
     struct(__MODULE__, options)
-  end
-
-  def get(client) do
-    HTTPotion.post("#{client.site}/v3/get", [body: default_options(client), headers: request_headers])
-    |> handle_response
-  end
-
-  defp default_options(client) do
-    %{
-      consumer_key: client.consumer_key,
-      access_token: client.access_token
-    } |> Poison.encode!
   end
 end
