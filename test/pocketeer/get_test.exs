@@ -20,7 +20,7 @@ defmodule Pocketeer.GetTest do
       json_response(conn, 200, "get_sample.json")
     end
 
-    {:ok, body} = Pocketeer.Get.get(client)
+    {:ok, body} = Pocketeer.get(client)
     assert Poison.Parser.parse!(body)
   end
 
@@ -30,7 +30,7 @@ defmodule Pocketeer.GetTest do
     end
 
     assert_raise Pocketeer.HTTPError, fn ->
-      Pocketeer.Get.get!(client)
+      Pocketeer.get!(client)
     end
   end
 
@@ -42,7 +42,7 @@ defmodule Pocketeer.GetTest do
     end
 
     options = %{state: :unread, tag: "test"}
-    {:ok, body} = Pocketeer.Get.get(client, options)
+    {:ok, body} = Pocketeer.get(client, options)
     assert Poison.Parser.parse!(body)
   end
 
@@ -56,7 +56,7 @@ defmodule Pocketeer.GetTest do
 
     options = Get.favorited |> Get.read |> Get.videos
 
-    {:ok, body} = Pocketeer.Get.get(client, options)
+    {:ok, body} = Pocketeer.get(client, options)
     assert Poison.Parser.parse!(body)
   end
 end

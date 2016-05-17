@@ -45,7 +45,8 @@ defmodule Pocketeer.Get do
             offset: 0
 
   @doc """
-  Main function to retrieve articles / items from the Pocket Retrieve API
+  Builds a new Get struct using the `opts` provided. It handles all allowed
+  values for the Retrieve API endpoint.
 
   ## Parameters
 
@@ -62,17 +63,8 @@ defmodule Pocketeer.Get do
     - `offset`: Used with count only, start items from offset position of results.
 
   """
-  @spec get(Client.t, Map.t) :: {:ok, Response.t} | {:error, HTTPError.t}
-  def get(client, options \\ %{}) do
-    HTTPotion.post("#{client.site}/v3/get", default_args(client, options))
-    |> handle_response
-  end
-
-  def get!(client, options \\ %{}) do
-    case get(client, options) do
-      {:ok, body}      -> body
-      {:error, reason} -> raise reason
-    end
+  def new(opts) do
+    struct(__MODULE__, opts)
   end
 
   def favorited(options \\ %{}) do
@@ -101,27 +93,5 @@ defmodule Pocketeer.Get do
 
   def images(options \\ %{}) do
     Map.put(options, :contentType, :image)
-  end
-
-  def find(client, search, options \\ %{}) do
-    options = Map.put(options, :search, search)
-    get(client, options)
-  end
-
-  defp build_body(client, options) do
-    %{
-      consumer_key: client.consumer_key,
-      access_token: client.access_token
-    }
-    |> Map.merge(options)
-    |> Poison.encode!
-  end
-
-  defp default_args(client, options) do
-    [
-      body: build_body(client, options),
-      headers: request_headers,
-      timeout: 10_000
-    ]
   end
 end

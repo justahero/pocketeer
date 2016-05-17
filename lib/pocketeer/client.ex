@@ -1,8 +1,4 @@
 defmodule Pocketeer.Client do
-  import Pocketeer.HTTPHandler
-
-  alias Pocketeer.HTTPHandler
-
   @type t :: %__MODULE__ {
     consumer_key: String.t,
     access_token: String.t,
