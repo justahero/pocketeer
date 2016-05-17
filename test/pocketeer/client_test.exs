@@ -1,8 +1,6 @@
 defmodule Pocketeer.ClientTest do
   use ExUnit.Case, async: false
 
-  import Pocketeer.TestHelpers
-
   doctest Pocketeer.Client
 
   test "new without site option" do
@@ -10,7 +8,10 @@ defmodule Pocketeer.ClientTest do
       consumer_key: "abcd",
       access_token: "1234"
     }
-    assert Pocketeer.Client.new(options)
+    client = Pocketeer.Client.new(options)
+    assert "abcd" == client.consumer_key
+    assert "1234" == client.access_token
+    assert "https://getpocket.com" == client.site
   end
 
   test "new with site option" do
@@ -19,6 +20,9 @@ defmodule Pocketeer.ClientTest do
       access_token: "1234",
       site: "localhost"
     }
-    assert Pocketeer.Client.new(options)
+    client = Pocketeer.Client.new(options)
+    assert "abcd" == client.consumer_key
+    assert "1234" == client.access_token
+    assert "localhost" == client.site
   end
 end

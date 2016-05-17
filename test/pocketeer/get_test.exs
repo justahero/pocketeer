@@ -13,6 +13,9 @@ defmodule Pocketeer.GetTest do
 
   test "get", %{server: server, client: client} do
     bypass server, "POST", "/v3/get", fn conn ->
+      assert conn.query_string == ""
+      assert conn.body_params["access_token"] == "1234"
+      assert conn.body_params["consumer_key"] == "abcd"
       json_response(conn, 200, "get_sample.json")
     end
 
@@ -32,6 +35,8 @@ defmodule Pocketeer.GetTest do
 
   test "get accepts options", %{server: server, client: client} do
     bypass server, "POST", "/v3/get", fn conn ->
+      assert conn.body_params["state"] == "unread"
+      assert conn.body_params["tag"] == "test"
       json_response(conn, 200, "get_sample.json")
     end
 

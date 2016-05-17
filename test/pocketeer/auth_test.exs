@@ -11,8 +11,13 @@ defmodule Pocketeer.AuthTest do
   end
 
   test "returns full authorization url" do
-    url = Pocketeer.Auth.authorize_url("abcd", "localhost")
-    assert url == "https://getpocket.com/auth/authorize?request_token=abcd&redirect_uri=localhost"
+    uri = URI.parse(Pocketeer.Auth.authorize_url("abcd", "localhost"))
+    assert uri.port == 443
+    assert uri.path == "/auth/authorize"
+
+    query = URI.decode_query(uri.query)
+    assert query["request_token"] == "abcd"
+    assert query["redirect_uri"] == "localhost"
   end
 
   test "returns OK response with code", %{server: server} do
