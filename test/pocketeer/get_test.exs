@@ -2,6 +2,7 @@ defmodule Pocketeer.GetTest do
   use ExUnit.Case, async: false
 
   import Pocketeer.TestHelpers
+  alias Pocketeer.Get
 
   doctest Pocketeer.Get
 
@@ -45,12 +46,17 @@ defmodule Pocketeer.GetTest do
     assert Poison.Parser.parse!(body)
   end
 
-  test "get favorite items", %{server: server, client: client} do
+  test "get favorite read videos", %{server: server, client: client} do
     bypass server, "POST", "/v3/get", fn conn ->
+      assert conn.body_params["favorite"] == 1
+      assert conn.body_params["state"] == "read"
+      assert conn.body_params["contentType"] == "video"
       json_response(conn, 200, "get_favorites.json")
     end
 
-    {:ok, body} = Pocketeer.Get.get_favorites(client)
+    options = Get.favorited |> Get.read |> Get.videos
+
+    {:ok, body} = Pocketeer.Get.get(client, options)
     assert Poison.Parser.parse!(body)
   end
 end

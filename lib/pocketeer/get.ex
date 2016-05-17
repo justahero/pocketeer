@@ -68,26 +68,44 @@ defmodule Pocketeer.Get do
     |> handle_response
   end
 
-  def get_favorites(client, options \\ %{}) do
-    options = Map.put(options, :favorite, 1)
-    get(client, options)
-  end
-
-  def get_unread(client, options \\ %{}) do
-    options = Map.put(options, :state, :unread)
-    get(client, options)
-  end
-
-  def find(client, search, options \\ %{}) do
-    options = Map.put(options, :search, search)
-    get(client, options)
-  end
-
   def get!(client, options \\ %{}) do
     case get(client, options) do
       {:ok, body}      -> body
       {:error, reason} -> raise reason
     end
+  end
+
+  def favorited(options \\ %{}) do
+    Map.put(options, :favorite, 1)
+  end
+
+  def unfavorited(options \\ %{}) do
+    Map.put(options, :favorite, 0)
+  end
+
+  def read(options \\ %{}) do
+    Map.put(options, :state, :read)
+  end
+
+  def unread(options \\ %{}) do
+    Map.put(options, :state, :unread)
+  end
+
+  def articles(options \\ %{}) do
+    Map.put(options, :contentType, :articles)
+  end
+
+  def videos(options \\ %{}) do
+    Map.put(options, :contentType, :video)
+  end
+
+  def images(options \\ %{}) do
+    Map.put(options, :contentType, :image)
+  end
+
+  def find(client, search, options \\ %{}) do
+    options = Map.put(options, :search, search)
+    get(client, options)
   end
 
   defp build_body(client, options) do
