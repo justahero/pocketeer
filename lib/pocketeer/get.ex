@@ -87,7 +87,8 @@ defmodule Pocketeer.Get do
   defp default_args(client, options) do
     [
       body: build_body(client, options),
-      headers: request_headers
+      headers: request_headers,
+      timeout: 10_000
     ]
   end
 end
