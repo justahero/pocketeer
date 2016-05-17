@@ -1,8 +1,6 @@
 defmodule Pocketeer.Auth do
   import Pocketeer.HTTPHandler
 
-  alias Pocketeer.HTTPHandler
-
   @doc """
   Returns the URL to authorize the application in the Pocket API
 
@@ -18,7 +16,7 @@ defmodule Pocketeer.Auth do
     "#{authorize_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
   end
   @doc """
-  Sends a GET request to fetch a request token
+  Sends a request to fetch a request token
 
   ## Parameters:
 
@@ -56,7 +54,7 @@ defmodule Pocketeer.Auth do
     |> handle_response
   end
 
-  def authorize_url do
+  defp authorize_url do
     "#{pocket_url}/auth/authorize"
   end
 
