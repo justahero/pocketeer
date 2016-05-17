@@ -8,9 +8,9 @@ defmodule Pocketeer.Get do
   alias Pocketeer.HTTPHandler
 
   @type state       :: :unread | :archive | :all
-  @type favorite    :: :all | :unfavored | :favored
-  @type tag         :: :all | String.t | :untagged
-  @type contentType :: :all | :article | :video | :image
+  @type favorite    :: :unfavored | :favored
+  @type tag         :: :String.t | :untagged
+  @type contentType :: :article | :video | :image
   @type sort        :: :newest | :oldest | :title | :site
   @type detailType  :: :simple | :complete
   @type search      :: binary
