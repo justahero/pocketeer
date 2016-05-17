@@ -45,6 +45,7 @@ defmodule Pocketeer.Get do
             count: 10,
             offset: 0
 
+  @spec get(Client.t, Map.t) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get(client, options \\ %{}) do
     HTTPotion.post("#{client.site}/v3/get", default_args(client, options))
     |> handle_response
@@ -74,16 +75,18 @@ defmodule Pocketeer.Get do
     end
   end
 
-  defp default_options(client, options) do
-    %{
+  defp build_body(client, options) do
+    test = %{
       consumer_key: client.consumer_key,
       access_token: client.access_token
-    } |> Poison.encode!
+    }
+    |> Map.merge(options)
+    |> Poison.encode!
   end
 
   defp default_args(client, options) do
     [
-      body: default_options(client, options),
+      body: build_body(client, options),
       headers: request_headers
     ]
   end
