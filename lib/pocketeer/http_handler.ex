@@ -12,6 +12,7 @@ defmodule Pocketeer.HTTPHandler do
     @request_headers
   end
 
+  @spec handle_response(HTTPotion.Response.t) :: {:ok, Response.t} | {:error, HTTPError}
   def handle_response(response) do
     case response do
       %HTTPotion.Response{body: body, headers: headers, status_code: status} when status in 200..299 ->
@@ -25,14 +26,32 @@ defmodule Pocketeer.HTTPHandler do
     end
   end
 
+  def build_body(client, options) do
+    %{
+      consumer_key: client.consumer_key,
+      access_token: client.access_token
+    }
+    |> Map.merge(options)
+    |> Poison.encode!
+  end
+
+  def default_args(client, options) do
+    [
+      body: build_body(client, options),
+      headers: request_headers,
+      timeout: 10_000
+    ]
+  end
+
   defp process_body(response) do
     Poison.Parser.parse!(response.body)
   end
 
   defp parse_error_message(body, headers) do
-    case headers[:'x-error'] do
-      nil   -> body
-      error -> "#{body}, #{error}"
+    case Enum.into(headers.hdrs, %{}) do
+      %{"x-error": error, "x-error-code": code} -> "#{body}, #{error} (code: #{code})"
+      %{"x-error": error} -> "#{body}, #{error}"
+      _ -> body
     end
   end
 end
