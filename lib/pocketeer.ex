@@ -1,6 +1,4 @@
 defmodule Pocketeer do
-  import Pocketeer.Get
-  import Pocketeer.HTTPError
   import Pocketeer.HTTPHandler
 
   @doc """
