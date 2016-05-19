@@ -1,6 +1,30 @@
 {
-  "action_results": [
-    true
-  ],
+  "item": {
+    "item_id": "1293429374",
+    "normal_url": "http://justahero.io",
+    "resolved_id": "0",
+    "extended_item_id": null,
+    "resolved_url": null,
+    "domain_id": null,
+    "origin_domain_id": null,
+    "response_code": null,
+    "mime_type": null,
+    "content_length": null,
+    "encoding": null,
+    "date_resolved": null,
+    "date_published": null,
+    "title": null,
+    "excerpt": null,
+    "word_count": null,
+    "innerdomain_redirect": null,
+    "login_required": null,
+    "has_image": null,
+    "has_video": null,
+    "is_index": null,
+    "is_article": null,
+    "used_fallback": null,
+    "lang": null,
+    "given_url": "http://justahero.io"
+  },
   "status": 1
 }

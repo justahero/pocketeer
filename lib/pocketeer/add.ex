@@ -23,6 +23,9 @@ defmodule Pocketeer.Add do
             tags: [],
             tweet_id: nil
 
+  @doc """
+  Builds a new Struct with `url` and `tags`.
+  """
   @spec new(map) :: t
   def new(%{url: _, tags: _} = options) do
     options = %{options | url: URI.encode_www_form(options[:url])}

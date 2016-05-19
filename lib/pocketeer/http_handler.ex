@@ -1,4 +1,8 @@
+require IEx
+
 defmodule Pocketeer.HTTPHandler do
+  @moduledoc false
+
   alias Pocketeer.Response
   alias Pocketeer.HTTPError
 

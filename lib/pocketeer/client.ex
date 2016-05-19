@@ -1,4 +1,8 @@
 defmodule Pocketeer.Client do
+  @moduledoc """
+  A simple Client struct to hold consumer key and access token for  easier use of this library.
+  """
+
   @type t :: %__MODULE__ {
     consumer_key: String.t,
     access_token: String.t,
