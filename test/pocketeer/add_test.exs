@@ -17,7 +17,7 @@ defmodule Pocketeer.AddTest do
       assert conn.query_string == ""
       assert conn.body_params["access_token"] == "1234"
       assert conn.body_params["consumer_key"] == "abcd"
-      assert conn.body_params["url"] == URI.encode_www_form("http://example.com")
+      assert conn.body_params["url"] == "http://example.com"
       json_response(conn, 200, "add_success.json")
     end
 
@@ -29,7 +29,7 @@ defmodule Pocketeer.AddTest do
   test "add with parameters", %{server: server, client: client} do
     bypass server, "POST", "/v3/add", fn conn ->
       assert conn.query_string == ""
-      assert conn.body_params["url"] == URI.encode_www_form("http://example.com")
+      assert conn.body_params["url"] == "http://example.com"
       assert conn.body_params["tags"] == "foo, bar"
       assert conn.body_params["tweet_id"] == "tweet"
       assert conn.body_params["title"] == "Try it"

@@ -6,45 +6,15 @@ defmodule Pocketeer.Add do
   import Pocketeer.HTTPHandler
   alias Pocketeer.Add
 
-  @type url      :: binary
-  @type title    :: String.t
-  @type tags     :: String.t | list
-  @type tweet_id :: String.t
-
-  @type t :: %__MODULE__{
-    url:      url,
-    title:    title,
-    tags:     tags,
-    tweet_id: tweet_id
-  }
-
-  defstruct url: "",
-            title: "",
-            tags: [],
-            tweet_id: nil
-
-  @doc """
-  Builds a new Struct with `url` and `tags`.
-  """
-  @spec new(map) :: t
-  def new(%{url: _, tags: _} = options) do
-    options = %{options | url: URI.encode_www_form(options[:url])}
-    options = %{options | tags: Enum.join(options[:tags], ", ")}
-    struct(__MODULE__, options)
-  end
-  def new(%{url: _} = options) do
-    options = %{options | url: URI.encode_www_form(options[:url])}
-    struct(__MODULE__, options)
-  end
-
-  @spec add(Client.t, Add.t) :: {:ok, Response.t} | {:error, HTTPError.t}
-  def add(client, options = %Add{url: _}) do
-    HTTPotion.post("#{client.site}/v3/add", default_args(client, options))
+  @spec add(Client.t, map) :: {:ok, Response.t} | {:error, HTTPError.t}
+  def add(client, %{url: url} = options) do
+    args = default_args(client, options |> parse_options)
+    HTTPotion.post("#{client.site}/v3/add", args)
     |> handle_response
   end
 
-  @spec add(Client.t, map) :: {:ok, Response.t} | {:error, HTTPError.t}
-  def add(client, options = %{url: _}) do
-    add(client, Add.new(options))
+  defp parse_options(%{tags: tags} = options) do
+    %{options | tags: Enum.join(tags, ", ")}
   end
+  defp parse_options(%{} = options) do options end
 end
