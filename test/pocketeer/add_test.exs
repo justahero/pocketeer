@@ -40,4 +40,15 @@ defmodule Pocketeer.AddTest do
     {:ok, body} = Pocketeer.Add.add(client, options)
     assert Poison.Parser.parse!(body)
   end
+
+  test "add with some ignored parameters", %{server: server, client: client} do
+    bypass server, "POST", "/v3/add", fn conn ->
+      assert conn.body_params["url"] == "http://example.com"
+      assert Map.has_key?(conn.body_params, "foo") == false
+      json_response(conn, 200, "add_success.json")
+    end
+
+    options = %{url: "http://example.com", foo: "bar"}
+    {:ok, body} = Pocketeer.Add.add(client, options)
+  end
 end

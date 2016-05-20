@@ -5,6 +5,8 @@ defmodule Pocketeer.Add do
 
   import Pocketeer.HTTPHandler
 
+  @options [:url, :tags, :title, :tweet_id]
+
   @doc """
   Adds / Creates a new item on Pocket
 
@@ -21,6 +23,7 @@ defmodule Pocketeer.Add do
   """
   @spec add(Client.t, map) :: {:ok, Response.t} | {:error, HTTPError.t}
   def add(client, %{url: _} = options) do
+    {options, _} = Dict.split(options, @options)
     args = default_args(client, options |> parse_options)
     HTTPotion.post("#{client.site}/v3/add", args)
     |> handle_response
