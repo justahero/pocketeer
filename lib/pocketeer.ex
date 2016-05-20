@@ -1,6 +1,4 @@
 defmodule Pocketeer do
-  import Pocketeer.Get
-  import Pocketeer.HTTPError
   import Pocketeer.HTTPHandler
 
   @doc """
@@ -23,22 +21,5 @@ defmodule Pocketeer do
       {:ok, body}      -> body
       {:error, reason} -> raise reason
     end
-  end
-
-  defp build_body(client, options) do
-    %{
-      consumer_key: client.consumer_key,
-      access_token: client.access_token
-    }
-    |> Map.merge(options)
-    |> Poison.encode!
-  end
-
-  defp default_args(client, options) do
-    [
-      body: build_body(client, options),
-      headers: request_headers,
-      timeout: 10_000
-    ]
   end
 end

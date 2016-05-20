@@ -4,8 +4,6 @@ defmodule Pocketeer.Get do
   of access.
   """
 
-  import Pocketeer.HTTPHandler
-
   @type state       :: :unread | :archive | :all
   @type favorite    :: 0 | 1
   @type tag         :: :String.t | :untagged
