@@ -29,12 +29,12 @@ defmodule Pocketeer.Send do
 
   def add(%{url: _} = options) do
     {options, _} = Dict.split(options, [:url, :tags, :title, :tweet_id])
-    Map.merge(%{action: "add"}, options)
+    [Map.merge(%{action: "add"}, options)]
   end
 
   def add(%{item_id: _} = options) do
     {options, _} = Dict.split(options, [:item_id, :tags, :title, :tweet_id])
-    Map.merge(%{action: "add"}, options)
+    [Map.merge(%{action: "add"}, options)]
   end
 
   def add(%Send{} = send, options) do
@@ -42,7 +42,7 @@ defmodule Pocketeer.Send do
   end
 
   def archive(item_id) when is_binary(item_id) do
-    %{action: "archive", item_id: item_id}
+    [%{action: "archive", item_id: item_id}]
   end
 
   def archive(item_ids) when is_list(item_ids) do
@@ -54,23 +54,23 @@ defmodule Pocketeer.Send do
   end
 
   def unarchive(item_id) when is_binary(item_id) do
-    %{action: "readd", item_id: item_id}
+    [%{action: "readd", item_id: item_id}]
   end
 
   def unarchive(item_ids) when is_list(item_ids) do
     Enum.map(item_ids, fn id -> unarchive(id) end)
   end
 
-  def unarchive(%Send{} = send, items) do
+  def unarchive(%Send{} = send, items)  do
     Send.new(send.actions ++ unarchive(items))
   end
 
   def favorite(item_id) do
-    %{action: "favorite", item_id: item_id}
+    [%{action: "favorite", item_id: item_id}]
   end
 
   def unfavorite(item_id) do
-    %{action: "unfavorite", item_id: item_id}
+    [%{action: "unfavorite", item_id: item_id}]
   end
 
   def post(actions, %Client{} = client) when is_list(actions) do

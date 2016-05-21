@@ -17,7 +17,7 @@ defmodule Pocketeer.SendTest do
       assert conn.query_string == ""
       assert conn.body_params["access_token"] == "1234"
       assert conn.body_params["consumer_key"] == "abcd"
-      assert_include %{"action": "archive", "item_id": "1234"}, conn.body_params["actions"]
+      assert_include %{"action" => "archive", "item_id" => "1234"}, conn.body_params["actions"]
       json_response(conn, 200, "send_favorite_success.json")
     end
 
@@ -26,8 +26,8 @@ defmodule Pocketeer.SendTest do
 
   test "archive multiple items", %{server: server, client: client} do
     bypass server, "POST", "/v3/send", fn conn ->
-      assert_include %{"action": "archive", "item_id": "1234"}, conn.body_params["actions"]
-      assert_include %{"action": "archive", "item_id": "9876"}, conn.body_params["actions"]
+      assert_include %{"action" => "archive", "item_id" => "1234"}, conn.body_params["actions"]
+      assert_include %{"action" => "archive", "item_id" => "9876"}, conn.body_params["actions"]
       json_response(conn, 200, "send_favorite_success.json")
     end
 
@@ -38,8 +38,8 @@ defmodule Pocketeer.SendTest do
 
   test "unarchive item", %{server: server, client: client} do
     bypass server, "POST", "/v3/send", fn conn ->
-      assert_include %{"action": "archive", "item_id": "1234"}, conn.body_params["actions"]
-      assert_include %{"action": "archive", "item_id": "9876"}, conn.body_params["actions"]
+      assert_include %{"action" => "readd", "item_id" => "1234"}, conn.body_params["actions"]
+      assert_include %{"action" => "readd", "item_id" => "9876"}, conn.body_params["actions"]
       json_response(conn, 200, "send_favorite_success.json")
     end
 
@@ -50,8 +50,9 @@ defmodule Pocketeer.SendTest do
   end
 
   def assert_include(expected, actual) when is_list(actual) do
-    Enum.any? actual, fn item ->
+    result = Enum.any? actual, fn item ->
       Map.drop(item, ["timestamp"]) |> Map.equal?(expected)
     end
+    assert result == true
   end
 end
