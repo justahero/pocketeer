@@ -12,11 +12,17 @@ defmodule Pocketeer.SendTest do
     {:ok, server: server, client: client}
   end
 
+  test "add item", %{server: server, client: client} do
+    bypass server, "POST", "/v3/send", fn conn ->
+      assert_include %{"action" => "add", "url" => "example.com"}, conn.body_params["actions"]
+      json_response(conn, 200, "send_favorite_success.json")
+    end
+
+    Send.post(Send.add(%{url: "example.com"}), client)
+  end
+
   test "archive item", %{server: server, client: client} do
     bypass server, "POST", "/v3/send", fn conn ->
-      assert conn.query_string == ""
-      assert conn.body_params["access_token"] == "1234"
-      assert conn.body_params["consumer_key"] == "abcd"
       assert_include %{"action" => "archive", "item_id" => "1234"}, conn.body_params["actions"]
       json_response(conn, 200, "send_favorite_success.json")
     end
@@ -36,23 +42,23 @@ defmodule Pocketeer.SendTest do
     |> Send.post(client)
   end
 
-  test "unarchive item", %{server: server, client: client} do
-    bypass server, "POST", "/v3/send", fn conn ->
-      assert_include %{"action" => "readd", "item_id" => "1234"}, conn.body_params["actions"]
-      assert_include %{"action" => "readd", "item_id" => "9876"}, conn.body_params["actions"]
-      json_response(conn, 200, "send_favorite_success.json")
-    end
-
-    Send.new
+  test "unarchive multiple items" do
+    actual = Send.new
     |> Send.unarchive("1234")
     |> Send.unarchive("9876")
-    |> Send.post(client)
+
+    assert_include %{action: "readd", item_id: "1234"}, actual
+    assert_include %{action: "readd", item_id: "9876"}, actual
   end
 
-  def assert_include(expected, actual) when is_list(actual) do
+  defp assert_include(expected, actual) when is_list(actual) do
     result = Enum.any? actual, fn item ->
       Map.drop(item, ["timestamp"]) |> Map.equal?(expected)
     end
     assert result == true
+  end
+
+  defp assert_include(expected, %Send{} = send) do
+    assert_include(expected, send.actions)
   end
 end
