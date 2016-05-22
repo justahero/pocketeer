@@ -32,8 +32,7 @@ defmodule Pocketeer.HTTPHandler do
   def build_body(client, options) do
     %{
       consumer_key: client.consumer_key,
-      access_token: client.access_token,
-      time: timestamp
+      access_token: client.access_token
     }
     |> Map.merge(options)
     |> Poison.encode!
@@ -41,7 +40,7 @@ defmodule Pocketeer.HTTPHandler do
 
   def default_args(client, options) do
     [
-      body: build_body(client, options),
+      body: build_body(client, Map.put(options, :time, timestamp)),
       headers: request_headers,
       timeout: 10_000
     ]
