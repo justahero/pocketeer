@@ -44,14 +44,25 @@ defmodule Pocketeer.SendTest do
 
   test "unarchive multiple items" do
     actual = Send.new
-    |> Send.unarchive("1234")
-    |> Send.unarchive("9876")
+             |> Send.unarchive("1234")
+             |> Send.unarchive("9876")
 
     assert_include %{action: "readd", item_id: "1234"}, actual
     assert_include %{action: "readd", item_id: "9876"}, actual
   end
 
+  test "favorite items" do
+    actual = Send.new
+             |> Send.favorite(["1234", "2345"])
+             |> Send.favorite("9876")
+
+    assert_include %{action: "favorite", item_id: "1234"}, actual
+    assert_include %{action: "favorite", item_id: "2345"}, actual
+    assert_include %{action: "favorite", item_id: "9876"}, actual
+  end
+
   defp assert_include(expected, actual) when is_list(actual) do
+    actual = List.flatten(actual)
     result = Enum.any? actual, fn item ->
       Map.drop(item, ["timestamp"]) |> Map.equal?(expected)
     end

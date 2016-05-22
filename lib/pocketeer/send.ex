@@ -65,12 +65,40 @@ defmodule Pocketeer.Send do
     Send.new(send.actions ++ unarchive(items))
   end
 
-  def favorite(item_id) do
+  def favorite(item_id) when is_binary(item_id) do
     [%{action: "favorite", item_id: item_id}]
   end
 
-  def unfavorite(item_id) do
+  def favorite(item_ids) when is_list(item_ids) do
+    Enum.map(item_ids, fn id -> favorite(id) end)
+  end
+
+  def favorite(%Send{} = send, items)  do
+    Send.new(send.actions ++ favorite(items))
+  end
+
+  def unfavorite(item_id) when is_binary(item_id) do
     [%{action: "unfavorite", item_id: item_id}]
+  end
+
+  def unfavorite(item_ids) when is_list(item_ids) do
+    Enum.map(item_ids, fn id -> unfavorite(id) end)
+  end
+
+  def unfavorite(%Send{} = send, items)  do
+    Send.new(send.actions ++ unfavorite(items))
+  end
+
+  def delete(item_id) when is_binary(item_id) do
+    [%{action: "delete", item_id: item_id}]
+  end
+
+  def delete(item_ids) when is_list(item_ids) do
+    Enum.map(item_ids, fn id -> delete(id) end)
+  end
+
+  def delete(%Send{} = send, items)  do
+    Send.new(send.actions ++ delete(items))
   end
 
   def post(actions, %Client{} = client) when is_list(actions) do
