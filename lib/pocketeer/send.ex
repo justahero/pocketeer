@@ -6,7 +6,8 @@ defmodule Pocketeer.Send do
   alias Pocketeer.Client
   alias Pocketeer.Send
 
-  @options [:url, :tags, :title, :tweet_id]
+  @url_options  [:url, :tags, :title, :tweet_id]
+  @item_options [:item_id, :tags, :title, :tweet_id]
 
   @type t :: %__MODULE__ {
     actions: list
@@ -28,12 +29,12 @@ defmodule Pocketeer.Send do
   end
 
   def add(%{url: _} = options) do
-    {options, _} = Dict.split(options, [:url, :tags, :title, :tweet_id])
+    {options, _} = Dict.split(options, @url_options)
     [Map.merge(%{action: "add"}, options)]
   end
 
   def add(%{item_id: _} = options) do
-    {options, _} = Dict.split(options, [:item_id, :tags, :title, :tweet_id])
+    {options, _} = Dict.split(options, @item_options)
     [Map.merge(%{action: "add"}, options)]
   end
 
