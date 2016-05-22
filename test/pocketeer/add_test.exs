@@ -22,7 +22,7 @@ defmodule Pocketeer.AddTest do
     end
 
     options = %{url: "http://example.com"}
-    {:ok, body} = Pocketeer.Add.add(client, options)
+    {:ok, body} = Add.add(client, options)
     assert Poison.Parser.parse!(body)
   end
 
@@ -37,7 +37,7 @@ defmodule Pocketeer.AddTest do
     end
 
     options = %{url: "http://example.com", title: "Try it", tweet_id: "tweet", tags: ["foo", "bar"]}
-    {:ok, body} = Pocketeer.Add.add(client, options)
+    {:ok, body} = Add.add(client, options)
     assert Poison.Parser.parse!(body)
   end
 
@@ -49,6 +49,7 @@ defmodule Pocketeer.AddTest do
     end
 
     options = %{url: "http://example.com", foo: "bar"}
-    {:ok, body} = Pocketeer.Add.add(client, options)
+    {:ok, body} = Add.add(client, options)
+    assert Poison.Parser.parse!(body)
   end
 end
