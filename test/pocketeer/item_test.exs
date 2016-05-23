@@ -19,11 +19,11 @@ defmodule Pocketeer.ItemTest do
     assert item == %{action: "archive", item_id: "1"}
   end
 
-  test "archive multiple entries in list" do
-    actual = Item.archive(["2", "3"])
+  test "favorite multiple entries in list" do
+    actual = Item.favorite(["2", "3"])
     expected = [
-      %{action: "archive", item_id: "2"},
-      %{action: "archive", item_id: "3"}
+      %{action: "favorite", item_id: "2"},
+      %{action: "favorite", item_id: "3"}
     ]
 
     assert actual == expected
@@ -36,6 +36,19 @@ defmodule Pocketeer.ItemTest do
     expected = [
       %{action: "archive", item_id: "1"},
       %{action: "archive", item_id: "2"}
+    ]
+
+    assert actual.actions == expected
+  end
+
+  test "build multiple items" do
+    actual = Item.new
+             |> Item.favorite(["1234", "2345"])
+             |> Item.unfavorite("9876")
+    expected = [
+      %{action: "favorite", item_id: "1234"},
+      %{action: "favorite", item_id: "2345"},
+      %{action: "unfavorite", item_id: "9876"}
     ]
 
     assert actual.actions == expected
