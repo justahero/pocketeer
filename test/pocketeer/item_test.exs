@@ -2,7 +2,17 @@ defmodule Pocketeer.ItemTest do
   use ExUnit.Case, async: false
 
   alias Pocketeer.Item
-  doctest Pocketeer.Send
+  doctest Pocketeer.Item
+
+  test "add single item with url" do
+    item = Item.add(%{url: "http://example.com"})
+    assert item == %{action: "add", url: "http://example.com"}
+  end
+
+  test "add single item with item id" do
+    item = Item.add(%{item_id: "1"})
+    assert item == %{action: "add", item_id: "1"}
+  end
 
   test "archive single item" do
     item = Item.archive("1")

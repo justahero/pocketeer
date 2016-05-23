@@ -2,6 +2,7 @@ defmodule Pocketeer.SendTest do
   use ExUnit.Case, async: false
 
   import Pocketeer.TestHelpers
+  alias Pocketeer.Item
   alias Pocketeer.Send
 
   doctest Pocketeer.Send
@@ -18,7 +19,7 @@ defmodule Pocketeer.SendTest do
       json_response(conn, 200, "send_favorite_success.json")
     end
 
-    Send.post(Send.add(%{url: "example.com"}), client)
+    Send.post(Item.add(%{url: "example.com"}), client)
   end
 
   test "archive item", %{server: server, client: client} do
@@ -27,7 +28,7 @@ defmodule Pocketeer.SendTest do
       json_response(conn, 200, "send_favorite_success.json")
     end
 
-    Send.post(Send.archive("1234"), client)
+    Send.post(Item.archive("1234"), client)
   end
 
   test "archive multiple items", %{server: server, client: client} do
@@ -37,24 +38,24 @@ defmodule Pocketeer.SendTest do
       json_response(conn, 200, "send_favorite_success.json")
     end
 
-    Send.new
-    |> Send.archive(["1234", "9876"])
+    Item.new
+    |> Item.archive(["1234", "9876"])
     |> Send.post(client)
   end
 
   test "unarchive multiple items" do
-    actual = Send.new
-             |> Send.unarchive("1234")
-             |> Send.unarchive("9876")
+    actual = Item.new
+             |> Item.unarchive("1234")
+             |> Item.unarchive("9876")
 
     assert_include %{action: "readd", item_id: "1234"}, actual
     assert_include %{action: "readd", item_id: "9876"}, actual
   end
 
   test "favorite items" do
-    actual = Send.new
-             |> Send.favorite(["1234", "2345"])
-             |> Send.favorite("9876")
+    actual = Item.new
+             |> Item.favorite(["1234", "2345"])
+             |> Item.favorite("9876")
 
     assert_include %{action: "favorite", item_id: "1234"}, actual
     assert_include %{action: "favorite", item_id: "2345"}, actual
@@ -69,7 +70,7 @@ defmodule Pocketeer.SendTest do
     assert result == true
   end
 
-  defp assert_include(expected, %Send{} = send) do
-    assert_include(expected, send.actions)
+  defp assert_include(expected, %Item{} = item) do
+    assert_include(expected, item.actions)
   end
 end
