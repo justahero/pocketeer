@@ -4,6 +4,7 @@ defmodule Pocketeer.Send do
   import Pocketeer.HTTPHandler
 
   alias Pocketeer.Client
+  alias Pocketeer.Item
   alias Pocketeer.Send
 
   @url_options  [:url, :tags, :title, :tweet_id]
@@ -102,8 +103,11 @@ defmodule Pocketeer.Send do
     Send.new(send.actions ++ delete(items))
   end
 
-  def post(actions, %Client{} = client) when is_list(actions) do
-    post(Send.new(actions), client)
+  def post(%Item{} = item, %Client{} = client) do
+    actions = %{actions: parse_actions(item.actions)}
+    body = build_body(client, actions)
+    HTTPotion.post("#{client.site}/v3/send", [body: body, headers: request_headers])
+    |> handle_response
   end
 
   def post(%Send{} = send, %Client{} = client) do
@@ -111,6 +115,14 @@ defmodule Pocketeer.Send do
     body = build_body(client, actions)
     HTTPotion.post("#{client.site}/v3/send", [body: body, headers: request_headers])
     |> handle_response
+  end
+
+  def post(action, %Client{} = client) when is_map(action) do
+    post(Item.new(action), client)
+  end
+
+  def post(actions, %Client{} = client) when is_list(actions) do
+    post(Item.new(actions), client)
   end
 
   def post(action, %Client{} = client) when is_map(action) do

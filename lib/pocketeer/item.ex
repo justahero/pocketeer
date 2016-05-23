@@ -21,8 +21,6 @@ defmodule Pocketeer.Item do
     %__MODULE__{actions: List.flatten(actions)}
   end
 
-
-
   def archive(id) when is_binary(id) do
     %{action: "archive", item_id: id}
   end
@@ -30,13 +28,11 @@ defmodule Pocketeer.Item do
   def archive(%Item{} = item, id) do append(item, [archive(id)]) end
 
 
-
+  # Private methods
 
   defp map(ids, function) do
     Enum.map(ids, fn id -> function.(id) end)
   end
-
-
 
   defp append(%Item{} = item, actions) when is_list(actions) do
     Item.new(item.actions ++ actions)
