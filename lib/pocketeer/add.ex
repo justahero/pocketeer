@@ -4,8 +4,6 @@ defmodule Pocketeer.Add do
   """
 
   import Pocketeer.HTTPHandler
-  import Pocketeer.Client
-
   alias Pocketeer.Client
 
   @options [:url, :tags, :title, :tweet_id]

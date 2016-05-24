@@ -35,7 +35,7 @@ defmodule Pocketeer.Client do
     }
   end
 
-  def new(options) do
+  def new(%{consumer_key: _, access_token: _} = options) do
     struct(__MODULE__, options)
   end
 end

@@ -5,7 +5,6 @@ defmodule Pocketeer.Send do
 
   alias Pocketeer.Client
   alias Pocketeer.Item
-  alias Pocketeer.Send
 
   def post(%Item{} = item, %Client{} = client) do
     actions = %{actions: parse_actions(item.actions)}
