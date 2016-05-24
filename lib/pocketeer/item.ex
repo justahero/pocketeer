@@ -1,19 +1,23 @@
 require IEx
 
 defmodule Pocketeer.Item do
+  alias Pocketeer.Item
+
   @moduledoc """
-  This module can be used to build specific actions for the Modify endpoint
+  This module can be used to build specific actions for the Modify endpoint.
+  The Pocket API allows to modify multiple items at once in a bulk operation. For this
+  several Item operations can be piped or build directly.
 
   ## Examples
 
-  TODO!
+      iex> Item.archive("1234")
+      %{action: "archive", item_id: "1234"}
 
   """
 
   @url_options  [:url, :tags, :title, :tweet_id]
   @item_options [:item_id, :tags, :title, :tweet_id]
 
-  alias Pocketeer.Item
 
   @type t :: %__MODULE__ {
     actions: list
