@@ -21,6 +21,13 @@ defmodule Pocketeer.Add do
     - `title`: The title of the entry (optional)
     - `tweet_id`: The id of the tweet to link the item with (optional)
 
+  ## Examples
+
+  ```
+  client = Pocketeer.Client.new("consumer_key", "access_token")
+  Pocketeer.Add.add(client, %{url: "http://example.com", title: "Hello", tags: "news"})
+  ```
+
   """
   @spec add(Client.t, map) :: {:ok, Response.t} | {:error, HTTPError.t}
   def add(%Client{} = client, %{url: _} = options) do
