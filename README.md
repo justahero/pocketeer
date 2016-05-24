@@ -1,6 +1,6 @@
 # Pocketeer
 
-A client library for the Pocket API written in Elixir.
+A client library for the Pocket API written in Elixir. If you want to picture how Pocketeer looks, [Pixar](http://pixar.wikia.com/wiki/Pocketeer) did a very good job.
 
 ## Installation
 

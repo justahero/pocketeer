@@ -1,120 +1,63 @@
 defmodule Pocketeer.Send do
-  @moduledoc false
+  @moduledoc """
+  Modify one or more items via the Modify API endpoint by sending one or more actions.
+
+  To generate actions use the `Pocketeer.Item` module.
+  """
 
   import Pocketeer.HTTPHandler
 
   alias Pocketeer.Client
-  alias Pocketeer.Send
+  alias Pocketeer.Item
 
-  @url_options  [:url, :tags, :title, :tweet_id]
-  @item_options [:item_id, :tags, :title, :tweet_id]
+  @doc """
+  Send a single action or a list of actions to Pocket's [Modify endpoint](https://getpocket.com/developer/docs/v3/modify).
 
-  @type t :: %__MODULE__ {
-    actions: list
-  }
+  ## Examples
 
-  defstruct actions: []
+  It's possible to send a single action via a struct, see linked Pocket's API documentation.
 
-  def new do
-    %__MODULE__{actions: []}
-  end
+  ```
+  # archive a single item with a given id.
+  client = Client.new("consumer_key", "access_token")
+  Send.post(%{action: "archive", item_id: "1234"}, client)
+  ```
 
-  def new(actions) when is_list(actions) do
-    %__MODULE__{actions: actions}
-  end
+  The Modify endpoint support a bulk operation, where several actions can be given as a list.
 
-  @spec new(map) :: t
-  def new(options) when is_map(options) do
-    struct(__MODULE__, options)
-  end
+  ```
+  client = Client.new("consumer_key", "access_token")
+  items = [
+    %{action: "favorite", item_id: "123"},
+    %{action: "delete", item_id: "456"}
+  ]
+  Send.post(items, client)
+  ```
 
-  def add(%{url: _} = options) do
-    {options, _} = Dict.split(options, @url_options)
-    [Map.merge(%{action: "add"}, options)]
-  end
+  The best way to send actions to the API is by constructing them via `Pocketeer.Item`.
 
-  def add(%{item_id: _} = options) do
-    {options, _} = Dict.split(options, @item_options)
-    [Map.merge(%{action: "add"}, options)]
-  end
+  ```
+  # same as above
+  client = Client.new("consumer_key", "access_token")
+  items = Send.new |> Send.archive("123") |> Send.delete("456")
+  Send.post(items, client)
+  ```
 
-  def add(%Send{} = send, options) do
-    Send.new(send.actions ++ add(options))
-  end
-
-  def archive(item_id) when is_binary(item_id) do
-    [%{action: "archive", item_id: item_id}]
-  end
-
-  def archive(item_ids) when is_list(item_ids) do
-    Enum.map(item_ids, fn id -> archive(id) end)
-  end
-
-  def archive(%Send{} = send, items)  do
-    Send.new(send.actions ++ archive(items))
-  end
-
-  def unarchive(item_id) when is_binary(item_id) do
-    [%{action: "readd", item_id: item_id}]
-  end
-
-  def unarchive(item_ids) when is_list(item_ids) do
-    Enum.map(item_ids, fn id -> unarchive(id) end)
-  end
-
-  def unarchive(%Send{} = send, items)  do
-    Send.new(send.actions ++ unarchive(items))
-  end
-
-  def favorite(item_id) when is_binary(item_id) do
-    [%{action: "favorite", item_id: item_id}]
-  end
-
-  def favorite(item_ids) when is_list(item_ids) do
-    Enum.map(item_ids, fn id -> favorite(id) end)
-  end
-
-  def favorite(%Send{} = send, items)  do
-    Send.new(send.actions ++ favorite(items))
-  end
-
-  def unfavorite(item_id) when is_binary(item_id) do
-    [%{action: "unfavorite", item_id: item_id}]
-  end
-
-  def unfavorite(item_ids) when is_list(item_ids) do
-    Enum.map(item_ids, fn id -> unfavorite(id) end)
-  end
-
-  def unfavorite(%Send{} = send, items)  do
-    Send.new(send.actions ++ unfavorite(items))
-  end
-
-  def delete(item_id) when is_binary(item_id) do
-    [%{action: "delete", item_id: item_id}]
-  end
-
-  def delete(item_ids) when is_list(item_ids) do
-    Enum.map(item_ids, fn id -> delete(id) end)
-  end
-
-  def delete(%Send{} = send, items)  do
-    Send.new(send.actions ++ delete(items))
-  end
-
-  def post(actions, %Client{} = client) when is_list(actions) do
-    post(Send.new(actions), client)
-  end
-
-  def post(%Send{} = send, %Client{} = client) do
-    actions = %{actions: parse_actions(send.actions)}
+  """
+  @spec post(map | list | Item.t, Client.t) :: {:ok, Response.t} | {:error, HTTPError.t}
+  def post(%Item{} = item, %Client{} = client) do
+    actions = %{actions: parse_actions(item.actions)}
     body = build_body(client, actions)
     HTTPotion.post("#{client.site}/v3/send", [body: body, headers: request_headers])
     |> handle_response
   end
 
   def post(action, %Client{} = client) when is_map(action) do
-    post(Send.new([action]), client)
+    post(Item.new(action), client)
+  end
+
+  def post(actions, %Client{} = client) when is_list(actions) do
+    post(Item.new(actions), client)
   end
 
   defp parse_actions(actions) do
