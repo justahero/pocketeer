@@ -1,5 +1,7 @@
 defmodule Pocketeer.Send do
-  @moduledoc false
+  @moduledoc """
+  Modify one or more items via the Modify API endpoint by sending actions.
+  """
 
   import Pocketeer.HTTPHandler
 

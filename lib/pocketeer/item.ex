@@ -13,11 +13,18 @@ defmodule Pocketeer.Item do
       iex> Item.archive("1234")
       %{action: "archive", item_id: "1234"}
 
+      iex> Item.favorite(["abcd", "9876"])
+      [%{action: "favorite", item_id: "abcd"}, %{action: "favorite", item_id: "9876"}]
+
+      iex> items = Item.new |> Item.favorite("2") |> Item.delete("3")
+      %Item{actions: [%{action: "favorite", item_id: "2"}, %{action: "delete", item_id: "3"}]}
+      iex> items.actions
+      [%{action: "favorite", item_id: "2"}, %{action: "delete", item_id: "3"}]
+
   """
 
   @url_options  [:url, :tags, :title, :tweet_id]
   @item_options [:item_id, :tags, :title, :tweet_id]
-
 
   @type t :: %__MODULE__ {
     actions: list
@@ -25,14 +32,8 @@ defmodule Pocketeer.Item do
 
   defstruct actions: []
 
-  def new do
-    %__MODULE__{actions: []}
-  end
-
-  def new(action) when is_map(action) do
-    %__MODULE__{actions: [action]}
-  end
-
+  def new do new([]) end
+  def new(action) when is_map(action) do new([action]) end
   def new(actions) when is_list(actions) do
     %__MODULE__{actions: List.flatten(actions)}
   end
