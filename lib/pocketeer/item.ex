@@ -4,18 +4,25 @@ defmodule Pocketeer.Item do
   alias Pocketeer.Item
 
   @moduledoc """
-  This module can be used to build specific actions for the Modify endpoint.
+  This module can be used to build item actions for the Modify endpoint.
+
   The Pocket API allows to modify multiple items at once in a bulk operation. For this
-  several Item operations can be piped or build directly.
+  several `Item` actions can be created directly or chained via pipe.
+
+  **Note**, the built action or list of actions can be used with the `Pocketeer.Send` functions
+  to modify items.
 
   ## Examples
 
+      # single action
       iex> Item.archive("1234")
       %{action: "archive", item_id: "1234"}
 
+      # multiple items of same action
       iex> Item.favorite(["abcd", "9876"])
       [%{action: "favorite", item_id: "abcd"}, %{action: "favorite", item_id: "9876"}]
 
+      # chained list of actions, can be combined as wished
       iex> items = Item.new |> Item.favorite("2") |> Item.delete("3")
       %Item{actions: [%{action: "favorite", item_id: "2"}, %{action: "delete", item_id: "3"}]}
       iex> items.actions
@@ -26,6 +33,9 @@ defmodule Pocketeer.Item do
   @url_options  [:url, :tags, :title, :tweet_id]
   @item_options [:item_id, :tags, :title, :tweet_id]
 
+  @typedoc """
+  A list of actions that can be send via `Pocketeer.Send`
+  """
   @type t :: %__MODULE__ {
     actions: list
   }
@@ -39,18 +49,30 @@ defmodule Pocketeer.Item do
   end
 
   @doc """
-  Creates / adds the given item or items to Pocket.
+  Returns a struct for adding an item to Pocket with an `url` or an `item_id`.
+  Alternatively a list of existing item ids can be given.
+
+  ## Examples
+
+      iex> Item.add(%{url: "http://hex.pm"})
+      %{action: "add", url: "http://hex.pm"}
+
+      iex> Item.add(%{item_id: "1234"})
+      %{action: "add", item_id: "1234"}
+
   """
   def add(%{url: _} = options) do
     {options, _} = Dict.split(options, @url_options)
     Map.merge(%{action: "add"}, options)
   end
-
   def add(%{item_id: _} = options) do
     {options, _} = Dict.split(options, @item_options)
     Map.merge(%{action: "add"}, options)
   end
-  def add(ids) when is_list(ids) do map(ids, &add/1) end
+
+  @doc """
+  Used to return a new list from the existing item
+  """
   def add(%Item{} = item, id) do append(item, [add(id)]) end
 
   @doc """
