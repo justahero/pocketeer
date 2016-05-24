@@ -52,6 +52,11 @@ defmodule Pocketeer.Item do
   Returns a struct for adding an item to Pocket with an `url` or an `item_id`.
   Alternatively a list of existing item ids can be given.
 
+  ## Parameters
+
+    - options: A map of options, requires `url` or `item_id` to be present.
+      Accepts the same parameters as the `Pocketeer.Add` module.
+
   ## Examples
 
       iex> Item.add(%{url: "http://hex.pm"})

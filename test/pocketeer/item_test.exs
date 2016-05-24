@@ -31,8 +31,8 @@ defmodule Pocketeer.ItemTest do
 
   test "archive multiple entries" do
     actual = Item.new
-            |> Item.archive("1")
-            |> Item.archive("2")
+             |> Item.archive("1")
+             |> Item.archive("2")
     expected = [
       %{action: "archive", item_id: "1"},
       %{action: "archive", item_id: "2"}

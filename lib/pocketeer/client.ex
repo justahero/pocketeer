@@ -1,6 +1,6 @@
 defmodule Pocketeer.Client do
   @moduledoc """
-  A simple Client struct to hold consumer key and access token for  easier use of this library.
+  A simple Client struct to hold consumer key and access token for easier use with this library.
   """
 
   @type t :: %__MODULE__ {

@@ -8,7 +8,6 @@ defmodule Pocketeer.Send do
   import Pocketeer.HTTPHandler
 
   alias Pocketeer.Client
-  alias Pocketeer.Item
 
   @doc """
   Send a single action or a list of actions to Pocket's [Modify endpoint](https://getpocket.com/developer/docs/v3/modify).
