@@ -12,7 +12,7 @@ defmodule Pocketeer.Auth do
 
   ## Examples
 
-      iex> Pocketeer.Auth.authorize_url("abcd", "http://example")
+      iex> Pocketeer.Auth.authorize_url("abcd", "http://example.com")
       "https://getpocket.com/auth/authorize?request_token=abcd&redirect_uri=http%3A%2F%2Fexample.com"
 
   ## Parameters
