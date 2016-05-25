@@ -1,6 +1,8 @@
 # Pocketeer
 
-A client library for the Pocket API written in Elixir. If you want to picture how Pocketeer looks, [Pixar](http://pixar.wikia.com/wiki/Pocketeer) did a very good job.
+A client library for the [Pocket API (v3)](https://getpocket.com/developer/docs/overview)  written in Elixir. The library supports the [Add](https://getpocket.com/developer/docs/v3/add), [Modify](https://getpocket.com/developer/docs/v3/modify) and [Retrieve](https://getpocket.com/developer/docs/v3/retrieve) endpoints of the Pocket API. It also supports modifying mulitple items at once in a bulk operation.
+
+If you want to picture how Pocketeer looks, [Pixar](http://pixar.wikia.com/wiki/Pocketeer) did a very good job.
 
 ## Installation
 
@@ -22,14 +24,17 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
-## Usage
+## Authentication
 
-To use the client, first a consumer key is necessary. For this your application needs to be registered on the [Pocket Developers page](https://getpocket.com/developer/apps/new).
-Once the application is registered the consumer key is displayed on the [My Applications](https://getpocket.com/developer/apps/) page.
+To use the Pocket API, first the authentication process needs to be done, by using the consumer key to retrieve an access token. Both are required to use the API.
 
-To use the client, first it's necessary to authorize the application. For more details check the [Authorization process](https://getpocket.com/developer/docs/authentication) on Pocket.
+For this your application needs to be registered on the [Pocket Developers page](https://getpocket.com/developer/apps/new). Once the application is registered the consumer key is displayed on the [My Applications](https://getpocket.com/developer/apps/) page. For more details check the [Authorization process](https://getpocket.com/developer/docs/authentication) on Pocket.
 
-  1. Fetch a request token from Pocket
+Your application should offer a page where users are redirected to after confirming or declining the authorization request by Pocket.
+
+The following steps show how to use the consumer key to get an access token.
+
+  1. Fetch `request_token` from Pocket.
 
     ```elixir
     {:ok, body} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
@@ -38,8 +43,7 @@ To use the client, first it's necessary to authorize the application. For more d
     #=> "abcd"
     ```
 
-  2. Once the user receives the request token, redirect the user to the authorization page.
-     The user might accept or decline the authorization request on Pocket.
+  2. With this token, redirect the user to the authorization page of your application.
 
     ```elixir
     # a helper function can be used to construct the url.
@@ -47,7 +51,7 @@ To use the client, first it's necessary to authorize the application. For more d
     #=> "https://getpocket.com/v3/oauth/authorize?request_token=abcd&redirect_uri=http%3A%2F%2Fyoursite.com"
     ```
 
-  3. Get an access token after the user accepts the authorization.
+  3. Get an `access_token` after the user accepts the authorization.
 
     ```elixir
     {:ok, body} = Pocketeer.Auth.get_access_token(consumer_key, request_token)
@@ -56,7 +60,7 @@ To use the client, first it's necessary to authorize the application. For more d
     #=> "egfh"
     ```
 
-For a more general handling of a request to also check for errors:
+For more detailed handling of the requests above:
 
 ```elixir
 response = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")

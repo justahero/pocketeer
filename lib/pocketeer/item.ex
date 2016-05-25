@@ -50,7 +50,6 @@ defmodule Pocketeer.Item do
 
   @doc """
   Returns a struct for adding an item to Pocket with an `url` or an `item_id`.
-  Alternatively a list of existing item ids can be given.
 
   ## Parameters
 
