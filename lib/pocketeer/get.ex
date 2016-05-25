@@ -5,7 +5,7 @@ defmodule Pocketeer.Get do
   """
 
   @type state       :: :unread | :archive | :all
-  @type favorite    :: 0 | 1
+  @type favorite    :: true | false
   @type tag         :: :String.t | :untagged
   @type contentType :: :article | :video | :image
   @type sort        :: :newest | :oldest | :title | :site
@@ -31,9 +31,9 @@ defmodule Pocketeer.Get do
   }
 
   defstruct state: :unread,
-            favorite: :all,
+            favorite: nil,
             tag: :all,
-            contentType: :all,
+            contentType: nil,
             sort: :newest,
             detailType: :simple,
             search: nil,
@@ -41,6 +41,9 @@ defmodule Pocketeer.Get do
             since: 0,
             count: 10,
             offset: 0
+
+  @contentTypes [:article, :video, :image]
+  @sorts [:newest, :oldest, :title, :site]
 
   @doc """
   Builds a new Get struct using the `opts` provided. It handles all allowed
@@ -62,34 +65,42 @@ defmodule Pocketeer.Get do
 
   """
   def new(opts) do
-    struct(__MODULE__, opts)
+    struct(__MODULE__, opts |> parse_options)
   end
 
-  def favorited(options \\ %{}) do
-    Map.put(options, :favorite, 1)
+  defp parse_options(options) do
+    options
+    |> parse_state
+    |> parse_favorite
+    |> parse_content_type
+    |> parse_sort
   end
 
-  def unfavorited(options \\ %{}) do
-    Map.put(options, :favorite, 0)
+  defp parse_state(options) do options end
+
+  defp parse_favorite(options) do
+    case Map.get(options, :favorite) do
+      true  -> %{options | favorite: 1}
+      false -> %{options | favorite: 0}
+      _     -> Map.delete(options, :favorite)
+    end
   end
 
-  def read(options \\ %{}) do
-    Map.put(options, :state, :read)
+  defp parse_content_type(options) do
+    case Map.get(options, :contentType) do
+      v when v in @contentTypes -> options
+      _ -> Map.delete(options, :contentType)
+    end
   end
 
-  def unread(options \\ %{}) do
-    Map.put(options, :state, :unread)
+  defp parse_sort(options) do
+    case Map.get(options, :sort) do
+      v when v in @sorts -> options
+      _ -> Map.delete(options, :sort)
+    end
   end
 
-  def articles(options \\ %{}) do
-    Map.put(options, :contentType, :articles)
-  end
-
-  def videos(options \\ %{}) do
-    Map.put(options, :contentType, :video)
-  end
-
-  def images(options \\ %{}) do
-    Map.put(options, :contentType, :image)
+  defp tags(options) do
+    options
   end
 end

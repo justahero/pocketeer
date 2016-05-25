@@ -37,14 +37,12 @@ defmodule Pocketeer.Add do
     |> handle_response
   end
 
-  defp parse_options(%{tags: tags} = options) when is_list(tags) do
-    %{options | tags: Enum.join(tags, ", ")}
-  end
-  defp parse_options(%{tags: tags} = options) when is_binary(tags) do
-    %{options | tags: tags}
-  end
-  defp parse_options(%{tags: tags} = options) when is_atom(tags) do
-    %{options | tags: to_string(tags)}
+  defp parse_options(%{tags: tags} = options) do
+    %{options | tags: parse_tags(tags)}
   end
   defp parse_options(%{} = options) do options end
+
+  defp parse_tags(tags) when is_list(tags) do Enum.join(tags, ", ") end
+  defp parse_tags(tags) when is_binary(tags) do tags end
+  defp parse_tags(tags) when is_atom(tags) do to_string(tags) end
 end

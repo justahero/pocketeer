@@ -12,6 +12,16 @@ defmodule Pocketeer.GetTest do
     {:ok, server: server, client: client}
   end
 
+  test "get without valid favorite property" do
+    options = Get.new(%{favorite: "unused"})
+    assert Map.get(options, :favorite) == nil
+  end
+
+  test "get with sort :oldest" do
+    options = Get.new(%{sort: :oldest})
+    assert Map.get(options, :sort) == :oldest
+  end
+
   test "get", %{server: server, client: client} do
     bypass server, "POST", "/v3/get", fn conn ->
       assert conn.query_string == ""
@@ -49,12 +59,12 @@ defmodule Pocketeer.GetTest do
   test "get favorite read videos", %{server: server, client: client} do
     bypass server, "POST", "/v3/get", fn conn ->
       assert conn.body_params["favorite"] == 1
-      assert conn.body_params["state"] == "read"
+      assert conn.body_params["state"] == "unread"
       assert conn.body_params["contentType"] == "video"
       json_response(conn, 200, "get_favorites.json")
     end
 
-    options = Get.favorited |> Get.read |> Get.videos
+    options = Get.new(%{favorite: true, state: :unread, contentType: :video})
 
     {:ok, body} = Pocketeer.get(client, options)
     assert Poison.Parser.parse!(body)
