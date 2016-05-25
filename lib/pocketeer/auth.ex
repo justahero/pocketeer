@@ -15,6 +15,7 @@ defmodule Pocketeer.Auth do
   def authorize_url(request_token, redirect_uri) do
     "#{authorize_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
   end
+
   @doc """
   Sends a request to fetch a request token
 
@@ -31,6 +32,10 @@ defmodule Pocketeer.Auth do
     body = ~s({"consumer_key": "#{consumer_key}", "redirect_uri": "#{redirect_uri}"})
     HTTPotion.post(request_token_url, [body: body, headers: request_headers])
     |> handle_response
+  end
+  @spec get_request_token(map) :: {:ok, map} | {:error, HTTPError.t}
+  def get_request_token(%{consumer_key: key, redirect_uri: uri}) do
+    get_request_token(key, uri)
   end
 
   @doc """
@@ -52,6 +57,9 @@ defmodule Pocketeer.Auth do
     body = ~s({"consumer_key": "#{consumer_key}", "code": "#{request_token}"})
     HTTPotion.post(access_token_url, [body: body, headers: request_headers])
     |> handle_response
+  end
+  def get_access_token(%{consumer_key: key, request_token: token}) do
+    get_access_token(key, token)
   end
 
   defp authorize_url do

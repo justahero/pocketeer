@@ -35,6 +35,7 @@ defmodule Pocketeer.Client do
     }
   end
 
+  @spec new(map) :: t
   def new(%{consumer_key: _, access_token: _} = options) do
     struct(__MODULE__, options)
   end
