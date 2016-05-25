@@ -32,9 +32,9 @@ defmodule Pocketeer.Get do
 
   defstruct state: :unread,
             favorite: nil,
-            tag: :all,
+            tag: nil,
             contentType: nil,
-            sort: :newest,
+            sort: nil,
             detailType: :simple,
             search: nil,
             domain: nil,
@@ -42,8 +42,10 @@ defmodule Pocketeer.Get do
             count: 10,
             offset: 0
 
+  @states       [:unread, :achive, :all]
   @contentTypes [:article, :video, :image]
-  @sorts [:newest, :oldest, :title, :site]
+  @sorts        [:newest, :oldest, :title, :site]
+  @detailTypes  [:simple, :complete]
 
   @doc """
   Builds a new Get struct using the `opts` provided. It handles all allowed
@@ -74,9 +76,15 @@ defmodule Pocketeer.Get do
     |> parse_favorite
     |> parse_content_type
     |> parse_sort
+    |> parse_detail_type
   end
 
-  defp parse_state(options) do options end
+  defp parse_state(options) do
+    case Map.get(options, :state) do
+      v when v in @states -> options
+      _ -> Map.delete(options, :state)
+    end
+  end
 
   defp parse_favorite(options) do
     case Map.get(options, :favorite) do
@@ -97,6 +105,13 @@ defmodule Pocketeer.Get do
     case Map.get(options, :sort) do
       v when v in @sorts -> options
       _ -> Map.delete(options, :sort)
+    end
+  end
+
+  defp parse_detail_type(options) do
+    case Map.get(options, :detailType) do
+      v when v in @detailTypes -> options
+      _ -> Map.delete(options, :detailType)
     end
   end
 
