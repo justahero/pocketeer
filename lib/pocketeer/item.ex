@@ -1,5 +1,3 @@
-require IEx
-
 defmodule Pocketeer.Item do
   alias Pocketeer.Item
 

@@ -22,7 +22,7 @@ defmodule Pocketeer.AddTest do
     end
 
     options = %{url: "http://example.com"}
-    assert {:ok, body} == Add.add(client, options)
+    {:ok, _body} = Add.add(client, options)
   end
 
   test "add with parameters", %{server: server, client: client} do
@@ -36,7 +36,7 @@ defmodule Pocketeer.AddTest do
     end
 
     options = %{url: "http://example.com", title: "Try it", tweet_id: "tweet", tags: ["foo", "bar"]}
-    assert {:ok, body} == Add.add(client, options)
+    {:ok, _body} = Add.add(client, options)
   end
 
   test "add with some ignored parameters", %{server: server, client: client} do
@@ -47,6 +47,6 @@ defmodule Pocketeer.AddTest do
     end
 
     options = %{url: "http://example.com", foo: "bar"}
-    assert {:ok, body} == Add.add(client, options)
+    {:ok, _body} = Add.add(client, options)
   end
 end

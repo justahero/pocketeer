@@ -27,7 +27,7 @@ defmodule Pocketeer do
     - `client`: The API client with consumer key and access token
     - `options`: The options struct for the Retrieve API endpoint
 
-  TODO describe all options
+  Returns the body of the `Pocketeer.Response` or raises an exception.
   """
   @spec get!(Client.t, Get.t) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get!(%Client{} = client, options \\ %{}) do
