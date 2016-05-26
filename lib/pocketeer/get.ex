@@ -42,6 +42,8 @@ defmodule Pocketeer.Get do
             count: 10,
             offset: 0
 
+  @options [:state, :favorite, :tag, :contentType, :sort, :detailType, :search, :domain, :since, :count, :offset]
+
   @states       [:unread, :achive, :all]
   @contentTypes [:article, :video, :image]
   @sorts        [:newest, :oldest, :title, :site]
@@ -67,7 +69,11 @@ defmodule Pocketeer.Get do
 
   """
   def new(opts) do
-    struct(__MODULE__, opts |> parse_options)
+    struct(__MODULE__, opts |> filter_options |> parse_options)
+  end
+
+  defp filter_options(options) do
+    options |> Dict.take(@options)
   end
 
   defp parse_options(options) do
