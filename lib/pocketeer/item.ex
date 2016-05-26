@@ -1,6 +1,8 @@
 defmodule Pocketeer.Item do
   alias Pocketeer.Item
 
+  import Pocketeer.TagsHelper
+
   @moduledoc """
   This module can be used to build item actions for the Modify endpoint.
 
@@ -51,7 +53,7 @@ defmodule Pocketeer.Item do
 
   ## Parameters
 
-    - options: A map of options, requires `url` or `item_id` to be present.
+    * `options` - A map of options, requires `url` or `item_id` to be present.
       Accepts the same parameters as the `Pocketeer.Add` module.
 
   ## Examples
@@ -74,8 +76,20 @@ defmodule Pocketeer.Item do
 
   @doc """
   Used to return a new list from the existing item
+
+  ## Parameters
+
+    * `item` - a `Pocketeer.Item` struct with options
+    * `id` - the item id
+
+  ## Examples
+
+      iex> Item.new |> Item.add(%{url: "http://foo.com"})
+      %Item{actions: [%{action: "add", url: "http://foo.com"}]}
+
   """
-  def add(%Item{} = item, id) do append(item, [add(id)]) end
+  @spec add(t, map) :: t
+  def add(%Item{} = item, %{} = options) do append(item, [add(options)]) end
 
   @doc """
   Archives the given item or items.
@@ -122,10 +136,23 @@ defmodule Pocketeer.Item do
   def delete(ids) when is_list(ids) do map(ids, &delete/1) end
   def delete(%Item{} = item, id) do append(item, [delete(id)]) end
 
+  @doc """
+  Adds one or more tags (comma separated string) to an item.
+  """
+  def tags_add(item_id, tags) when is_binary(item_id) do
+    %{action: "tags_add", item_id: item_id, tags: parse_tags(tags)}
+  end
+  def tags_add(ids, tags) when is_list(ids) do map(ids, tags, &tags_add/2) end
+  def tags_add(%Item{} = item, id, tags) do append(item, [tags_add(id, tags)]) end
+
   # Private methods
 
   defp map(ids, function) do
     Enum.map(ids, fn id -> function.(id) end)
+  end
+
+  defp map(ids, tags, function) do
+    Enum.map(ids, fn id -> function.(id, tags) end)
   end
 
   defp append(%Item{} = item, actions) when is_list(actions) do
