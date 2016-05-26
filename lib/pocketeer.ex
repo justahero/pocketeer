@@ -4,7 +4,7 @@ defmodule Pocketeer do
   alias Pocketeer.Client
 
   @doc """
-  Main function to retrieve articles / items from the Pocket API.
+  Fetches a list of articles / items from the Pocket API.
 
   The method allows to either provide a map of options as defined in the official API documentation or by
   building a `Pocketeer.Get` struct, which might be easier to use
@@ -42,18 +42,24 @@ defmodule Pocketeer do
   def get(%{consumer_key: key, access_token: token}, %{} = options) do
     get(Client.new(key, token), options)
   end
+
+  @doc """
+  Fetches a list of articles / items from Pocket with default settings.
+
+  See documentation of `Pocketeer.get/2` for more details.
+  """
   @spec get(Client.t | map) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get(%Client{} = client) do get(client, %{}) end
 
   @doc """
-  Returns a list of articles / items from the Pocket API.
+  Fetches a list of articles / items from the Pocket API.
 
   ## Parameters
 
     - `client`: The API client with consumer key and access token
     - `options`: The options struct for the Retrieve API endpoint
 
-  Returns the body of the `Pocketeer.Response` or raises an exception.
+  Returns the body of the `Pocketeer.Response` or raises an exception with error message.
   """
   @spec get!(Client.t | map, Get.t | map) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get!(%Client{} = client, options \\ %{}) do
