@@ -55,17 +55,52 @@ defmodule Pocketeer.Get do
 
   ## Parameters
 
-    - `state`: The state of the article / item, :unread, :archive or :all
-    - `favorite`: When given either 0 (un-favorited) or 1 (favorited), if not given all
-    - `tag`: A tag name, only returns items with given tag or `_untagged_` to fetch all items without any tags
-    - `contentType`: Fetches items of a specific content type, either `:article`, `:video` or `:image` only
-    - `sort`: Sorting method, how items are returned, `:newest`, `:oldest`, `:title`, `:site`
-    - `detailType`: Returns either less properties when `simple` or all when `complete`
-    - `search`: Search term to return only items that match url or title
-    - `domain`: Only return items for a specific domain
-    - `since`: Unix timestamp to consider that were modified after
-    - `count`: The number of items to return (max 10).
-    - `offset`: Used with count only, start items from offset position of results.
+  Builds a parameters strucht to get items from the [Pocket API](https://getpocket.com/developer/docs/v3/retrieve).
+  This struct accepts a list of options that define how items are fetched. The struct can be given as parameter to `Pocketeer.get`.
+
+  *`:state`* - the state of the articles.
+
+    * `:unread` - only return unread articles (default)
+    * `:archive` - only return archived articles
+    * `:all` - return both unread and archived articles
+
+  `:favorite` - when not given returns all
+
+    * `true` - return favorited articles only
+    * `false` - return non-favorited articles only
+
+  `:tag` - a tag to return items
+
+    * `tag_name` - only returns articles with the tag
+    * `untagged` - return articles that have no tag at all
+
+  `:contentType` - the content type of the articles
+
+    * `:article` - only return articles
+    * `:video` -  only return videos or articles with embedded videos
+    * `:image` - only return images
+
+  `:sort` - sorting method in which returned articles are ordered
+
+    * `:newest` - orders items from recent to oldest
+    * `:oldest` - orders items from oldest to recent
+    * `:title` - orders items by title in alphabetical order
+    * `:site` - orders items by url in alphabetical order
+
+  `:detailType` - defines detail of result
+
+    * `:simple` - only return titles and urls of items
+    * `:complete` - return full data for each item
+
+  `:search` - when given return only items that where the title or url matches the string
+
+  `:domain` - when given only return items from a particular domain
+
+  `:since` - when given returns items that were modified after the given unix timestamp
+
+  `:count` - when given sets the number of items to return
+
+  `:offset` - when given defines the offset position of results, works only in combination with `:count`
 
   """
   def new(opts) do
