@@ -14,7 +14,7 @@ defmodule Pocketeer.Client do
             site: "https://getpocket.com"
 
   @doc """
-  Creates a new Pocketeer client
+  Builds a Client.
 
   ## Parameters
 
@@ -35,6 +35,20 @@ defmodule Pocketeer.Client do
     }
   end
 
+  @doc """
+
+  Builds a Client struct with `consumery_key` and `access_token`.
+
+  ## Parameters
+
+    - options: a map with `consumer_key` and `access_token`
+
+  ## Examples
+
+      iex> Pocketeer.Client.new(%{consumer_key: "1234", access_token: "abcd"})
+      %Pocketeer.Client{access_token: "abcd", consumer_key: "1234", site: "https://getpocket.com"}
+
+  """
   @spec new(map) :: t
   def new(%{consumer_key: _, access_token: _} = options) do
     struct(__MODULE__, options)
