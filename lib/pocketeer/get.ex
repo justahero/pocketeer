@@ -6,7 +6,7 @@ defmodule Pocketeer.Get do
 
   @type state       :: :unread | :archive | :all
   @type favorite    :: true | false
-  @type tag         :: :String.t | :untagged
+  @type tag         :: binary | :untagged
   @type contentType :: :article | :video | :image
   @type sort        :: :newest | :oldest | :title | :site
   @type detailType  :: :simple | :complete
@@ -35,7 +35,7 @@ defmodule Pocketeer.Get do
             tag: nil,
             contentType: nil,
             sort: nil,
-            detailType: :simple,
+            detailType: nil,
             search: nil,
             domain: nil,
             since: 0,
