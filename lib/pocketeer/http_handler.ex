@@ -1,5 +1,3 @@
-require IEx
-
 defmodule Pocketeer.HTTPHandler do
   @moduledoc false
 

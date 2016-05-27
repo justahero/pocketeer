@@ -1,4 +1,8 @@
 defmodule Pocketeer.Response do
+  @moduledoc """
+  A basic HTTP Response with status, headers and body.
+  """
+
   @type status  :: integer
   @type headers :: map
   @type body    :: String.t

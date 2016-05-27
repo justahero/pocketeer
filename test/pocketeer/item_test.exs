@@ -14,6 +14,11 @@ defmodule Pocketeer.ItemTest do
     assert item == %{action: "add", item_id: "1"}
   end
 
+  test "add with Item" do
+    item = Item.new |> Item.add(%{url: "http://example.com"})
+    assert item == %Item{actions: [%{action: "add", url: "http://example.com"}]}
+  end
+
   test "archive single item" do
     item = Item.archive("1")
     assert item == %{action: "archive", item_id: "1"}
@@ -52,5 +57,20 @@ defmodule Pocketeer.ItemTest do
     ]
 
     assert actual.actions == expected
+  end
+
+  test "adds single tag" do
+    actual = Item.tags_add("123", "news")
+    assert actual == %{action: "tags_add", item_id: "123", tags: "news"}
+  end
+
+  test "adds multiple tags to several items" do
+    actual = Item.tags_add(["1", "2"], ["a", "b"])
+    expected = [
+      %{action: "tags_add", item_id: "1", tags: "a, b"},
+      %{action: "tags_add", item_id: "2", tags: "a, b"},
+    ]
+
+    assert actual == expected
   end
 end

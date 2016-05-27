@@ -1,7 +1,6 @@
 defmodule Pocketeer.Get do
   @moduledoc """
-  This module implements the Retrieve endpoint of the Pocket API and offers a few flavors
-  of access.
+  Builds structs for use with [Retrieve endpoint](https://getpocket.com/developer/docs/v3/retrieve) of the Pocket API.
   """
 
   @type state       :: :unread | :archive | :all
@@ -16,6 +15,9 @@ defmodule Pocketeer.Get do
   @type count       :: number
   @type offset      :: number
 
+  @typedoc """
+  A map of properties that can be used with `Pocketeer.get/2`.
+  """
   @type t :: %__MODULE__{
     state:       state,
     favorite:    favorite,
@@ -154,9 +156,5 @@ defmodule Pocketeer.Get do
       v when v in @detailTypes -> options
       _ -> Map.delete(options, :detailType)
     end
-  end
-
-  defp tags(options) do
-    options
   end
 end

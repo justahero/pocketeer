@@ -1,4 +1,8 @@
 defmodule Pocketeer do
+  @moduledoc """
+  Base module
+  """
+
   import Pocketeer.HTTPHandler
 
   alias Pocketeer.Client

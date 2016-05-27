@@ -1,9 +1,10 @@
 defmodule Pocketeer.Add do
   @moduledoc """
-  This module implements the Add endpoint of the Pocket API.
+  Send requests to the [Add endpoint](https://getpocket.com/developer/docs/v3/add) of the Pocket API.
   """
 
   import Pocketeer.HTTPHandler
+  import Pocketeer.TagsHelper
   alias Pocketeer.Client
 
   @options [:url, :tags, :title, :tweet_id]
@@ -54,8 +55,4 @@ defmodule Pocketeer.Add do
     %{options | tags: parse_tags(tags)}
   end
   defp parse_options(%{} = options) do options end
-
-  defp parse_tags(tags) when is_list(tags) do Enum.join(tags, ", ") end
-  defp parse_tags(tags) when is_binary(tags) do tags end
-  defp parse_tags(tags) when is_atom(tags) do to_string(tags) end
 end
