@@ -1,6 +1,6 @@
 defmodule Pocketeer.Add do
   @moduledoc """
-  This module implements the Add endpoint of the Pocket API.
+  Send requests to the [Add endpoint](https://getpocket.com/developer/docs/v3/add) of the Pocket API.
   """
 
   import Pocketeer.HTTPHandler
