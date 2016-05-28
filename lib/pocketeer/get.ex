@@ -32,7 +32,7 @@ defmodule Pocketeer.Get do
     offset:      offset
   }
 
-  defstruct state: :unread,
+  defstruct state: nil,
             favorite: nil,
             tag: nil,
             contentType: nil,
