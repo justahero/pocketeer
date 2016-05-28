@@ -103,6 +103,12 @@ Item.new
 {:ok, %{"action_results" => [true, true], "status" => 1}}
 ```
 
+## Other libraries
+
+There are other libraries out there worth checking out:
+
+* [pocketex](https://github.com/essenciary/pocketex)
+
 
 ## Licene
 
