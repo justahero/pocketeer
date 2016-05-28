@@ -25,6 +25,17 @@ defmodule PocketeerTest do
     assert Poison.Parser.parse!(body)
   end
 
+  test "get! returns response body", %{server: server, client: client} do
+    bypass server, "POST", "/v3/get", fn conn ->
+      json_response(conn, 200, "get_sample.json")
+    end
+
+    options = %{state: :unread, tag: "test"}
+    body = Pocketeer.get!(client, options)
+           |> Poison.Parser.parse!
+    assert body
+  end
+
   test "get! raises on error", %{server: server, client: client} do
     bypass server, "POST", "/v3/get", fn conn ->
       Plug.Conn.resp(conn, 400, "400 Bad Request")

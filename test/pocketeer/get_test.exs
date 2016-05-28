@@ -7,7 +7,7 @@ defmodule Pocketeer.GetTest do
 
   test "get with invalid state" do
     options = Get.new(%{state: "foo"})
-    assert Map.get(options, :state) == :unread
+    assert Map.get(options, :state) == nil
   end
 
   test "get without valid favorite property" do
