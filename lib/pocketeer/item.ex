@@ -1,15 +1,12 @@
 defmodule Pocketeer.Item do
-  alias Pocketeer.Item
-
-  import Pocketeer.TagsHelper
-
   @moduledoc """
-  This module can be used to build item actions for the Modify endpoint.
+  Builds structs for use with the [Modify API](https://getpocket.com/developer/docs/v3/modify),
+  to modify items.
 
   The Pocket API allows to modify multiple items at once in a bulk operation. For this
-  several `Item` actions can be created directly or chained via pipe.
+  several `Item` actions can be created directly or chained via pipe operator.
 
-  **Note**, the built action or list of actions can be used with the `Pocketeer.Send` functions
+  **Note** an `Item` struct then can be used with the `Pocketeer.send/2` functions
   to modify items.
 
   ## Examples
@@ -30,11 +27,15 @@ defmodule Pocketeer.Item do
 
   """
 
+  alias Pocketeer.Item
+
+  import Pocketeer.TagsHelper
+
   @url_options  [:url, :tags, :title, :tweet_id]
   @item_options [:item_id, :tags, :title, :tweet_id]
 
   @typedoc """
-  A list of actions that can be send via `Pocketeer.Send`
+  A list of actions that can be send via `Pocketeer.send/2`
   """
   @type t :: %__MODULE__ {
     actions: list
