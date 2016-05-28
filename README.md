@@ -102,3 +102,8 @@ Item.new
 |> Pocketeer.post(client)
 {:ok, %{"action_results" => [true, true], "status" => 1}}
 ```
+
+
+## Licene
+
+This software is licensed under [MIT License](https://github.com/justahero/pocketeer/blob/master/LICENSE.md).

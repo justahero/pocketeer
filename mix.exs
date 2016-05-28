@@ -2,18 +2,21 @@ defmodule Pocketeer.Mixfile do
   use Mix.Project
 
   @version "0.1.0"
+  @project_url "https://www.github.com/justahero/pocketeer"
 
   def project do
     [ app: :pocketeer,
       name: "Pocketeer",
       version: @version,
       elixir: "~> 1.2",
+      description: description,
       deps: deps,
       package: package,
-      description: description,
+      source_url: @project_url,
+      homepage_url: @project_url,
       elixirc_paths: elixirc_paths(Mix.env),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod
     ]
   end
 
@@ -51,8 +54,10 @@ defmodule Pocketeer.Mixfile do
   end
 
   defp package do
-    [ files: [ "lib", "mix.exs", "README.md" ],
-      maintainers: [ "Sebastian Ziebell" ]
+    [ files: [ "lib", "mix.exs", "README.md", "LICENSE" ],
+      maintainers: [ "Sebastian Ziebell" ],
+      licenses: ["MIT"],
+      links: %{"Github" => @project_url}
     ]
   end
 
