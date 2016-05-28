@@ -86,11 +86,11 @@ Pocketeer.add(client, %{item_id: "1234", title: "Saved before", tweet_id: "tweet
 %{:ok, %{"item" => { ... }}}
 ```
 
-To fetch the list of the last 10 oldest favorited videos that are from youtube:
+To fetch the list of the last 10 oldest favorited videos.
 
 ```elixir
-options = Pocketeer.Get.new(%{sort: :oldest, count: 10, domain: "youtube.com", contentType: :video, favorite: true})
-{:ok, response} = Pocketeer.get(client, options})
+options = Pocketeer.Get.new(%{sort: :oldest, count: 10, contentType: :video, favorite: true})
+{:ok, response} = Pocketeer.get(client, options)
 ```
 
 To delete an item and also add tags to another item, executed in a bulk operation
