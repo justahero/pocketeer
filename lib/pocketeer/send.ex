@@ -12,10 +12,11 @@ defmodule Pocketeer.Send do
 
   @doc """
   Send a single action or a list of actions to Pocket's [Modify endpoint](https://getpocket.com/developer/docs/v3/modify).
+  Either a map with defined options can be given or a `Pocketeer.Item` struct.
 
   ## Examples
 
-  It's possible to send a single action via a struct, see linked Pocket's API documentation.
+  It's possible to send a single action via a map of options, see linked Pocket's API documentation.
 
   ```
   # archive a single item with a given id.
@@ -23,7 +24,7 @@ defmodule Pocketeer.Send do
   Send.post(%{action: "archive", item_id: "1234"}, client)
   ```
 
-  The Modify endpoint support a bulk operation, where several actions can be given as a list.
+  The function also supports a bulk operation, where several actions can be given as a list.
 
   ```
   client = Client.new("consumer_key", "access_token")
@@ -34,13 +35,18 @@ defmodule Pocketeer.Send do
   Send.post(items, client)
   ```
 
-  The best way to send actions to the API is by constructing them via `Pocketeer.Item`.
+  The preferred way to send a list of actions to the API is by constructing them via `Pocketeer.Item`.
 
   ```
   # same as above
   client = Client.new("consumer_key", "access_token")
-  items = Send.new |> Send.archive("123") |> Send.delete("456")
+  items = Item.new |> Item.archive("123") |> Item.delete("456")
   Send.post(items, client)
+  # or
+  Item.new
+  |> Item.archive("123")
+  |> Item.delete("456")
+  |> Send.post(client)
   ```
 
   """

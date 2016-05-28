@@ -1,6 +1,6 @@
 defmodule Pocketeer.Get do
   @moduledoc """
-  Builds structs for use with [Retrieve endpoint](https://getpocket.com/developer/docs/v3/retrieve) of the Pocket API.
+  Builds structs for use with the [Retrieve endpoint](https://getpocket.com/developer/docs/v3/retrieve) of the Pocket API.
   """
 
   @type state       :: :unread | :archive | :all

@@ -1,6 +1,7 @@
 defmodule Pocketeer do
   @moduledoc """
-  Functions to send requests to the Pocket API.
+  Functions to send requests to the [Pocket API](https://getpocket.com/developer/docs/overview) to
+  create, modify or fetch items.
   """
 
   import Pocketeer.HTTPHandler
@@ -77,7 +78,7 @@ defmodule Pocketeer do
   end
 
   @doc """
-  Saves a new article on Pocket.
+  Saves / adds a new article in Pocket.
 
   ## Parameters
 

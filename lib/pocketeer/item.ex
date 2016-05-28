@@ -6,7 +6,7 @@ defmodule Pocketeer.Item do
   The Pocket API allows to modify multiple items at once in a bulk operation. For this
   several `Item` actions can be created directly or chained via pipe operator.
 
-  **Note**, an `Item` struct then can be used with the `Pocketeer.post/2` functions
+  **Note** an `Item` struct then can be used with the `Pocketeer.send/2` functions
   to modify items.
 
   ## Examples
@@ -35,7 +35,7 @@ defmodule Pocketeer.Item do
   @item_options [:item_id, :tags, :title, :tweet_id]
 
   @typedoc """
-  A list of actions that can be send via `Pocketeer.Send`
+  A list of actions that can be send via `Pocketeer.send/2`
   """
   @type t :: %__MODULE__ {
     actions: list
