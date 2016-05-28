@@ -1,6 +1,6 @@
 defmodule Pocketeer do
   @moduledoc """
-  Base module
+  Implements functions for sending requests to the Pocket API.
   """
 
   import Pocketeer.HTTPHandler

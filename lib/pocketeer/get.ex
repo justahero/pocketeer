@@ -105,6 +105,7 @@ defmodule Pocketeer.Get do
   `:offset` - when given defines the offset position of results, works only in combination with `:count`
 
   """
+  @spec new(map) :: t
   def new(opts) do
     struct(__MODULE__, opts |> filter_options |> parse_options)
   end
