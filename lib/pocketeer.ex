@@ -70,7 +70,7 @@ defmodule Pocketeer do
 
   Returns the body of the `Pocketeer.Response` or raises an exception with error message.
   """
-  @spec get!(Client.t | map, Get.t | map) :: {:ok, Response.t} | {:error, HTTPError.t}
+  @spec get!(Client.t | map, Get.t | map) :: Response.t
   def get!(%Client{} = client, options \\ %{}) do
     case get(client, options) do
       {:ok, body}      -> body

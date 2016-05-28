@@ -1,4 +1,6 @@
 defmodule PathHelpers do
+  @moduledoc false
+
   def fixture_path do
     Path.expand("../fixtures", __DIR__)
   end
@@ -20,6 +22,8 @@ defmodule PathHelpers do
 end
 
 defmodule Pocketeer.TestHelpers do
+  @moduledoc false
+
   import ExUnit.Assertions
   import Plug.Conn
   import PathHelpers
