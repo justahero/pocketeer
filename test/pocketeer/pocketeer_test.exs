@@ -3,6 +3,7 @@ defmodule PocketeerTest do
 
   import Pocketeer.TestHelpers
   alias Pocketeer.Get
+  alias Pocketeer.Item
 
   doctest Pocketeer
 
@@ -96,5 +97,63 @@ defmodule PocketeerTest do
 
     options = %{url: "http://example.com", foo: "bar"}
     {:ok, _body} = Pocketeer.add(client, options)
+  end
+
+  test "post with single struct", %{server: server, client: client} do
+    bypass server, "POST", "/v3/send", fn conn ->
+      assert_include %{"action" => "add", "url" => "example.com"}, conn.body_params["actions"]
+      json_response(conn, 200, "send_favorite_success.json")
+    end
+
+    Pocketeer.post(%{action: "add", url: "example.com"}, client)
+  end
+
+  test "post with a list of structs", %{server: server, client: client} do
+    bypass server, "POST", "/v3/send", fn conn ->
+      assert_include %{"action" => "favorite", "item_id" => "1234"}, conn.body_params["actions"]
+      assert_include %{"action" => "favorite", "item_id" => "9876"}, conn.body_params["actions"]
+      json_response(conn, 200, "send_favorite_success.json")
+    end
+
+    items = Item.favorite(["1234", "9876"])
+    Pocketeer.post(items, client)
+  end
+
+  test "post with single Item", %{server: server, client: client} do
+    bypass server, "POST", "/v3/send", fn conn ->
+      assert_include %{"action" => "archive", "item_id" => "1234"}, conn.body_params["actions"]
+      assert_include %{"action" => "archive", "item_id" => "9876"}, conn.body_params["actions"]
+      json_response(conn, 200, "send_favorite_success.json")
+    end
+
+    Item.new
+    |> Item.archive(["1234", "9876"])
+    |> Pocketeer.post(client)
+  end
+
+  test "post with multiple mixed Items", %{server: server, client: client} do
+    bypass server, "POST", "/v3/send", fn conn ->
+      assert_include %{"action" => "archive", "item_id" => "1234"}, conn.body_params["actions"]
+      assert_include %{"action" => "archive", "item_id" => "9876"}, conn.body_params["actions"]
+      assert_include %{"action" => "delete", "item_id" => "4444"}, conn.body_params["actions"]
+      json_response(conn, 200, "send_favorite_success.json")
+    end
+
+    Item.new
+    |> Item.archive(["1234", "9876"])
+    |> Item.delete("4444")
+    |> Pocketeer.post(client)
+  end
+
+  defp assert_include(expected, actual) when is_list(actual) do
+    actual = List.flatten(actual)
+    result = Enum.any? actual, fn item ->
+      Map.drop(item, ["timestamp"]) |> Map.equal?(expected)
+    end
+    assert result == true
+  end
+
+  defp assert_include(expected, %Item{} = item) do
+    assert_include(expected, item.actions)
   end
 end

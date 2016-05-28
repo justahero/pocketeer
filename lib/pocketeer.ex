@@ -1,13 +1,14 @@
 defmodule Pocketeer do
   @moduledoc """
-  Functions to send requests to the [Pocket API](https://getpocket.com/developer/docs/overview) to
-  create, modify or fetch items.
+  This is the main module to send requests to the [Pocket API](https://getpocket.com/developer/docs/overview).
+  A few functions are available to create, modify or retrieve items from the Pocket API.
   """
 
   import Pocketeer.HTTPHandler
   import Pocketeer.TagsHelper
 
   alias Pocketeer.Client
+  alias Pocketeer.Item
 
   @add_options [:url, :tags, :title, :tweet_id]
 
@@ -119,11 +120,72 @@ defmodule Pocketeer do
     add(Client.new(key, token), options)
   end
 
+  @doc """
+  Send a single action or a list of actions to Pocket's [Modify endpoint](https://getpocket.com/developer/docs/v3/modify).
+  Either a map with defined options can be given or a `Pocketeer.Item` struct.
+
+  ## Examples
+
+  It's possible to send a single action via a map of options, see linked Pocket's API documentation.
+
+  ```
+  # archive a single item with a given id.
+  client = Client.new("consumer_key", "access_token")
+  post(%{action: "archive", item_id: "1234"}, client)
+  ```
+
+  The function also supports a bulk operation, where several actions can be given as a list.
+
+  ```
+  client = Client.new("consumer_key", "access_token")
+  items = [
+    %{action: "favorite", item_id: "123"},
+    %{action: "delete", item_id: "456"}
+  ]
+  post(items, client)
+  ```
+
+  The preferred way to send a list of actions to the API is by constructing them via `Pocketeer.Item`.
+
+  ```
+  # same as above
+  client = Client.new("consumer_key", "access_token")
+  items = Item.new |> Item.archive("123") |> Item.delete("456")
+  post(items, client)
+  # or
+  Item.new
+  |> Item.archive("123")
+  |> Item.delete("456")
+  |> post(client)
+  ```
+
+  """
+  @spec post(map | list | Item.t, Client.t) :: {:ok, Response.t} | {:error, HTTPError.t}
+  def post(%Item{} = item, %Client{} = client) do
+    actions = %{actions: parse_actions(item.actions)}
+    body = build_body(client, actions)
+    HTTPotion.post("#{client.site}/v3/send", [body: body, headers: request_headers])
+    |> handle_response
+  end
+
+  def post(action, %Client{} = client) when is_map(action) do
+    post(Item.new(action), client)
+  end
+
+  def post(actions, %Client{} = client) when is_list(actions) do
+    post(Item.new(actions), client)
+  end
+
+  defp parse_actions(actions) do
+    actions
+    |> List.flatten
+    |> Enum.map(fn action -> Map.put(action, :timestamp, timestamp) end)
+  end
+
   # private methods
 
   defp parse_options(%{tags: tags} = options) do
     %{options | tags: parse_tags(tags)}
   end
   defp parse_options(%{} = options) do options end
-
 end
