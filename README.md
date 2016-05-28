@@ -1,8 +1,8 @@
 # Pocketeer
 
-A client library for the [Pocket API (v3)](https://getpocket.com/developer/docs/overview)  written in Elixir. The library supports the [Add](https://getpocket.com/developer/docs/v3/add), [Modify](https://getpocket.com/developer/docs/v3/modify) and [Retrieve](https://getpocket.com/developer/docs/v3/retrieve) endpoints of the Pocket API. It also supports modifying mulitple items at once in a bulk operation.
+A client library for the [getpocket.com](https://getpocket.com) service written in Elixir. The library supports all endpoints of the Pocket API. It also supports modifying mulitple items in a bulk operation.
 
-If you want to picture how Pocketeer looks, [Pixar](http://pixar.wikia.com/wiki/Pocketeer) did a very good job.
+If you want to picture how Pocketeer might look, [Pixar's character](http://pixar.wikia.com/wiki/Pocketeer) with the same name from the short movie [Toy Story Of Terror!](http://pixar.wikia.com/wiki/Toy_Story_of_Terror!) is a really good fit.
 
 ## Installation
 
@@ -12,7 +12,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
     ```elixir
     def deps do
-      [{:pocketeer, "~> 0.0.1"}]
+      [{:pocketeer, "~> 0.1.0"}]
     end
     ```
 
@@ -60,7 +60,7 @@ The following steps show how to use the consumer key to get an access token.
     #=> "egfh"
     ```
 
-For more detailed handling of the requests above:
+For more detailed handling of the request above:
 
 ```elixir
 response = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
@@ -68,4 +68,37 @@ case response do
   {:ok, body}     -> body["code"]
   {:error, error} -> IO.puts "Error: #{error.message}"
 end
+```
+
+## Usage
+
+Once the `consumer_key` and `access_token` are available, the API offers different functions, categorized into
+[Add](https://getpocket.com/developer/docs/v3/add), [Modify](https://getpocket.com/developer/docs/v3/modify) and [Retrieve](https://getpocket.com/developer/docs/v3/retrieve).
+
+To save a new item in Pocket:
+
+```elixir
+# with url
+Pocketeer.add(client, %{url: "http://example.com", title: "Test", tags: ["news", "test"]})
+%{:ok, %{"item" => { ... }}}
+# with existing item id
+Pocketeer.add(client, %{item_id: "1234", title: "Saved before", tweet_id: "tweet_id"})
+%{:ok, %{"item" => { ... }}}
+```
+
+To fetch the list of the last 10 oldest favorited videos that are from youtube:
+
+```elixir
+options = Pocketeer.Get.new(%{sort: :oldest, count: 10, domain: "youtube.com", contentType: :video, favorite: true})
+{:ok, response} = Pocketeer.get(client, options})
+```
+
+To delete an item and also add tags to another item, executed in a bulk operation
+
+```elixir
+Item.new
+|> Item.delete("1234")
+|> Item.tags_add("4444", ["great", "stuff"])
+|> Pocketeer.post(client)
+{:ok, %{"action_results" => [true, true], "status" => 1}}
 ```
