@@ -1,5 +1,7 @@
 # Pocketeer
 
+![alt tag](https://travis-ci.org/justahero/pocketeer.svg?branch=master)
+
 A client library for the [getpocket.com](https://getpocket.com) service written in Elixir. The library supports all endpoints of the Pocket API. It also supports modifying mulitple items in a bulk operation.
 
 If you want to picture how Pocketeer might look, [Pixar's character](http://pixar.wikia.com/wiki/Pocketeer) with the same name from the short movie [Toy Story Of Terror!](http://pixar.wikia.com/wiki/Toy_Story_of_Terror!) is a really good fit.
