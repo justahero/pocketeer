@@ -1,6 +1,6 @@
 # Pocketeer
 
-![alt tag](https://travis-ci.org/justahero/pocketeer.svg?branch=master)
+[![Build Status](https://travis-ci.org/justahero/pocketeer.svg?branch=master)](https://travis-ci.org/justahero/pocketeer)
 
 A client library for the [getpocket.com](https://getpocket.com) service written in Elixir. The library supports all endpoints of the Pocket API. It also supports modifying mulitple items in a bulk operation.
 
