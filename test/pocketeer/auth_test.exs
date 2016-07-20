@@ -51,7 +51,7 @@ defmodule Pocketeer.AuthTest do
     assert error.message == "400 Bad Request, 99"
   end
 
-  test "returns OK response when requesting access token", %{server: server} do
+  test "returns OK response when access token granted", %{server: server} do
     doc = ~s({"access_token":"token", "username":"pocket"})
     Application.put_env(:pocketeer, :pocket_url, bypass_server(server))
     bypass server, "POST", "/v3/oauth/authorize", fn conn ->
@@ -60,5 +60,16 @@ defmodule Pocketeer.AuthTest do
 
     {:ok, body} = Pocketeer.Auth.get_access_token("123", "abcd")
     assert body == %{"access_token" => "token", "username" => "pocket"}
+  end
+
+  test "returns error response when access token denied", %{server: server} do
+    doc = "User rejected code."
+    Application.put_env(:pocketeer, :pocket_url, bypass_server(server))
+    bypass server, "POST", "/v3/oauth/authorize", fn conn ->
+      Plug.Conn.resp(conn, 403, doc)
+    end
+
+    {:error, error} = Pocketeer.Auth.get_access_token("123", "abcd")
+    assert error.message == doc
   end
 end
