@@ -26,8 +26,8 @@ defmodule PocketeerTest do
       json_response(conn, 200, "get_sample.json")
     end
 
-    {:ok, body} = Pocketeer.get(client)
-    assert Poison.Parser.parse!(body)
+    {:ok, response} = Pocketeer.get(client)
+    assert is_map(response)
   end
 
   test "get! returns response body", %{server: server, client: client} do
@@ -36,9 +36,8 @@ defmodule PocketeerTest do
     end
 
     options = %{state: :unread, tag: "test"}
-    body = Pocketeer.get!(client, options)
-           |> Poison.Parser.parse!
-    assert body
+    response = Pocketeer.get!(client, options)
+    assert is_map(response)
   end
 
   test "get! raises on error", %{server: server, client: client} do
@@ -59,8 +58,8 @@ defmodule PocketeerTest do
     end
 
     options = %{state: :unread, tag: "test"}
-    {:ok, body} = Pocketeer.get(client, options)
-    assert Poison.Parser.parse!(body)
+    {:ok, response} = Pocketeer.get(client, options)
+    assert is_map(response)
   end
 
   test "get favorite read videos", %{server: server, client: client} do
@@ -73,8 +72,8 @@ defmodule PocketeerTest do
 
     options = Get.new(%{favorite: true, state: :unread, contentType: :video})
 
-    {:ok, body} = Pocketeer.get(client, options)
-    assert Poison.Parser.parse!(body)
+    {:ok, response} = Pocketeer.get(client, options)
+    assert is_map(response)
   end
 
   test "add with url only", %{server: server, client: client} do

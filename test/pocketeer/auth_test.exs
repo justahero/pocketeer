@@ -27,8 +27,8 @@ defmodule Pocketeer.AuthTest do
       Plug.Conn.resp(conn, 200, ~s({"code": "123456", "status": null}))
     end
 
-    {:ok, body} = Pocketeer.Auth.get_request_token("123", "localhost")
-    assert body == %{"code" => "123456", "status" => nil}
+    {:ok, response} = Pocketeer.Auth.get_request_token("123", "localhost")
+    assert response.body == %{"code" => "123456", "status" => nil}
   end
 
   test "returns message if error occurs", %{server: server} do
@@ -59,8 +59,8 @@ defmodule Pocketeer.AuthTest do
       Plug.Conn.resp(conn, 200, doc)
     end
 
-    {:ok, body} = Pocketeer.Auth.get_access_token("123", "abcd")
-    assert body == %{"access_token" => "token", "username" => "pocket"}
+    {:ok, response} = Pocketeer.Auth.get_access_token("123", "abcd")
+    assert response.body == %{"access_token" => "token", "username" => "pocket"}
   end
 
   test "returns error response when access token denied", %{server: server} do

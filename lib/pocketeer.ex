@@ -73,7 +73,7 @@ defmodule Pocketeer do
   @spec get!(Client.t | map, Get.t | map) :: Response.t
   def get!(%Client{} = client, options \\ %{}) do
     case get(client, options) do
-      {:ok, body}      -> body
+      {:ok, response}  -> response
       {:error, reason} -> raise reason
     end
   end
