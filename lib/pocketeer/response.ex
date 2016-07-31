@@ -1,6 +1,9 @@
 defmodule Pocketeer.Response do
   @moduledoc """
   A basic HTTP Response with status, headers and body.
+
+  When fetching articles from Pocket, this module also holds a property `articles`
+  with a list of parsed items.
   """
 
   alias Pocketeer.Article

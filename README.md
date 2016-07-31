@@ -93,7 +93,10 @@ To fetch the list of the last 10 oldest favorited videos.
 ```elixir
 options = Pocketeer.Get.new(%{sort: :oldest, count: 10, contentType: :video, favorite: true})
 {:ok, response} = Pocketeer.get(client, options)
+# response.articles provides a list of all fetched articles
 ```
+
+The `response` variable is of type `Pocketeer.Response`.
 
 To delete an item and also add tags to another item, executed in a bulk operation
 

@@ -42,6 +42,13 @@ defmodule Pocketeer do
   {:ok, response} = Pocketeer.get(%{consumer_key: "abcd", access_token: "1234", options})
   ```
 
+  ## Return
+
+  If successful the return value `{:ok, response}` holds a `Poocketeer.Response` struct.
+  The `Pocketeer.get` function also fills the `articles` property of the `Pocketeer.Response` struct and parses
+  the list of articles fetched from Pocket. This makes accessing its properties more convenient, see
+  `Pocketeer.Article` for the accessible properties.
+
   """
   @spec get(Client.t | map, Get.t | map) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get(%Client{} = client, %{} = options) do
