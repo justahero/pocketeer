@@ -73,7 +73,23 @@ defmodule PocketeerTest do
     options = Get.new(%{favorite: true, state: :unread, contentType: :video})
 
     {:ok, response} = Pocketeer.get(client, options)
+
+    assert Enum.count(response.articles) == 1
     assert is_map(response)
+  end
+
+  test "get parses articles into response", %{server: server, client: client} do
+    bypass server, "POST", "/v3/get", fn conn ->
+      json_response(conn, 200, "get_sample.json")
+    end
+
+    {:ok, response} = Pocketeer.get(client, %{})
+
+    assert Enum.count(response.articles) == 1
+
+    [article | _] = response.articles
+    assert Enum.count(article.images) == 1
+    assert Enum.count(article.videos) == 1
   end
 
   test "add with url only", %{server: server, client: client} do

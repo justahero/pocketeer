@@ -46,7 +46,7 @@ defmodule Pocketeer.TestHelpers do
   def json_response(connection, status_code, file_path) do
     connection
     |> put_resp_header("content-type", "application/json")
-    |> send_resp(status_code, load_json!(file_path) |> Poison.encode!)
+    |> send_resp(status_code, load_json!(file_path))
   end
 
   defp parse_request_body(connection) do

@@ -17,7 +17,7 @@ defmodule Pocketeer.HTTPHandler do
   def handle_response(response) do
     case response do
       %HTTPotion.Response{body: body, headers: headers, status_code: status} when status in 200..299 ->
-        {:ok, Response.new(status, headers, body |> process_body)}
+        {:ok, Response.new(status, headers, parse_json(body))}
       %HTTPotion.Response{body: body, headers: headers, status_code: _status} ->
         {:error, %HTTPError{message: parse_error_message(body, headers)}}
       %HTTPotion.HTTPError{message: message} ->
@@ -48,7 +48,7 @@ defmodule Pocketeer.HTTPHandler do
     :os.system_time(:seconds)
   end
 
-  defp process_body(body) do
+  defp parse_json(body) when is_binary(body) do
     Poison.Parser.parse!(body)
   end
 
