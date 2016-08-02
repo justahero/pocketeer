@@ -43,12 +43,6 @@ defmodule Pocketeer.TestHelpers do
     end
   end
 
-  def build_client(options \\ %{}) do
-    default_client_options
-    |> Map.merge(options)
-    |> Pocketeer.Client.new
-  end
-
   def json_response(connection, status_code, file_path) do
     connection
     |> put_resp_header("content-type", "application/json")
@@ -62,9 +56,5 @@ defmodule Pocketeer.TestHelpers do
       json_decoder: Poison
     ]
     Plug.Parsers.call(connection, Plug.Parsers.init(options))
-  end
-
-  defp default_client_options do
-    %{consumer_key: "abcd", access_token: "1234"}
   end
 end
