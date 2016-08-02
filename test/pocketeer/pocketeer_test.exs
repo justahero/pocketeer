@@ -2,6 +2,8 @@ defmodule PocketeerTest do
   use ExUnit.Case, async: false
 
   import Pocketeer.TestHelpers
+
+  alias Pocketeer.Client
   alias Pocketeer.Get
   alias Pocketeer.Item
 
@@ -9,7 +11,10 @@ defmodule PocketeerTest do
 
   setup do
     server = Bypass.open
-    client = build_client(%{site: bypass_server(server)})
+
+    Application.put_env(:pocketeer, :pocket_url, bypass_server(server))
+
+    client = Client.new(%{consumer_key: "abcd", access_token: "1234"})
     {:ok, server: server, client: client}
   end
 

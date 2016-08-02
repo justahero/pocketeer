@@ -11,7 +11,7 @@ defmodule Pocketeer.Client do
 
   defstruct consumer_key: nil,
             access_token: nil,
-            site: "https://getpocket.com"
+            site: nil
 
   @doc """
   Builds a Client.
@@ -29,19 +29,16 @@ defmodule Pocketeer.Client do
   """
   @spec new(String.t, String.t) :: t
   def new(consumer_key, access_token) do
-    %__MODULE__{
-      consumer_key: consumer_key,
-      access_token: access_token
-    }
+    new(%{consumer_key: consumer_key, access_token: access_token})
   end
 
   @doc """
 
-  Builds a Client struct with `consumery_key` and `access_token`.
+  Builds a Client struct with `consumer_key` and `access_token`.
 
   ## Parameters
 
-    - options: a map with `consumer_key` and `access_token`
+    - options: a map with `consumer_key`, `access_token` and `site` (optional)
 
   ## Examples
 
@@ -50,7 +47,15 @@ defmodule Pocketeer.Client do
 
   """
   @spec new(map) :: t
-  def new(%{consumer_key: _, access_token: _} = options) do
-    struct(__MODULE__, options)
+  def new(%{} = options) do
+    %__MODULE__ {
+      consumer_key: Map.fetch!(options, :consumer_key),
+      access_token: Map.fetch!(options, :access_token),
+      site: Map.get(options, :site, pocket_url)
+    }
+  end
+
+  defp pocket_url do
+    Application.get_env(:pocketeer, :pocket_url, "https://getpocket.com")
   end
 end
