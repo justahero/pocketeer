@@ -127,7 +127,7 @@ defmodule Pocketeer.Article do
             is_article: "1",
             has_image: "0",
             has_video: "0",
-            word_count: "0",
+            word_count: 0,
             tags: [],
             authors: [],
             images: [],
@@ -146,6 +146,7 @@ defmodule Pocketeer.Article do
     options
     |> parse_images()
     |> parse_videos()
+    |> parse_word_count()
   end
 
   defp parse_images(%{} = options) do
@@ -158,6 +159,12 @@ defmodule Pocketeer.Article do
     Map.update(options, :videos, [], fn videos ->
       Enum.map(videos, fn {_key, video} -> Video.new(video) end)
     end)
+  end
+
+  def parse_word_count(%{word_count: word_count} = options) do
+    case Integer.parse(word_count) do
+      {count, _} -> Map.put(options, :word_count, count)
+    end
   end
 
   defp to_atom_keys(options) do
