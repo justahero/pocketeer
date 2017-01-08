@@ -111,7 +111,7 @@ defmodule Pocketeer.Get do
   end
 
   defp filter_options(options) do
-    options |> Dict.take(@options)
+    options |> Map.take(@options)
   end
 
   defp parse_options(options) do

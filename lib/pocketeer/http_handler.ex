@@ -38,8 +38,8 @@ defmodule Pocketeer.HTTPHandler do
 
   def default_args(client, options) do
     [
-      body: build_body(client, Map.put(options, :time, timestamp)),
-      headers: request_headers,
+      body: build_body(client, Map.put(options, :time, timestamp())),
+      headers: request_headers(),
       timeout: 10_000
     ]
   end

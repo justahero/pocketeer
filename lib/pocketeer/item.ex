@@ -67,11 +67,11 @@ defmodule Pocketeer.Item do
 
   """
   def add(%{url: _} = options) do
-    {options, _} = Dict.split(options, @url_options)
+    {options, _} = Map.split(options, @url_options)
     Map.merge(%{action: "add"}, options)
   end
   def add(%{item_id: _} = options) do
-    {options, _} = Dict.split(options, @item_options)
+    {options, _} = Map.split(options, @item_options)
     Map.merge(%{action: "add"}, options)
   end
 
