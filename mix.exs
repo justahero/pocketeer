@@ -1,7 +1,7 @@
 defmodule Pocketeer.Mixfile do
   use Mix.Project
 
-  @version "0.1.3"
+  @version "0.1.4"
   @project_url "https://www.github.com/justahero/pocketeer"
 
   def project do
@@ -43,7 +43,7 @@ defmodule Pocketeer.Mixfile do
   defp deps do
     [
       {:httpotion, "~> 3.0"},
-      {:poison, "~> 2.1"},
+      {:poison, "~> 2.1 or ~> 3.0"},
 
       {:bypass, "~> 0.5", only: :test},
       {:excoveralls, "~> 0.5", only: :test},
