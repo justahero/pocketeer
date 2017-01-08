@@ -48,8 +48,8 @@ defmodule Pocketeer.Mixfile do
       {:bypass, "~> 0.5", only: :test},
       {:excoveralls, "~> 0.5", only: :test},
 
-      {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: [:dev, :test, :docs]}
+      {:earmark, "~> 1.0"},
+      {:ex_doc, "~> 0.14", only: [:dev, :test, :docs]}
     ]
   end
 
