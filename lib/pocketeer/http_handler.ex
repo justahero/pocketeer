@@ -5,8 +5,8 @@ defmodule Pocketeer.HTTPHandler do
   alias Pocketeer.HTTPError
 
   @request_headers [
-    {"Content-Type", "application/json; charset=UTF-8"},
-    {"X-Accept", "application/json"}
+    {:"Content-Type", "application/json; charset=UTF-8"},
+    {:"X-Accept", "application/json"}
   ]
 
   def request_headers do
