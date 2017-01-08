@@ -111,7 +111,7 @@ defmodule Pocketeer do
   """
   @spec add(Client.t | map, map) :: {:ok, Response.t} | {:error, HTTPError.t}
   def add(%Client{} = client, %{url: _} = options) do
-    {options, _} = Dict.split(options, @add_options)
+    {options, _} = Map.split(options, @add_options)
     args = default_args(client, options |> parse_options)
     HTTPotion.post("#{client.site}/v3/add", args)
     |> handle_response
@@ -164,7 +164,7 @@ defmodule Pocketeer do
   def post(%Item{} = item, %Client{} = client) do
     actions = %{actions: parse_actions(item.actions)}
     body = build_body(client, actions)
-    HTTPotion.post("#{client.site}/v3/send", [body: body, headers: request_headers])
+    HTTPotion.post("#{client.site}/v3/send", [body: body, headers: request_headers()])
     |> handle_response
   end
 
@@ -179,7 +179,7 @@ defmodule Pocketeer do
   defp parse_actions(actions) do
     actions
     |> List.flatten
-    |> Enum.map(fn action -> Map.put(action, :timestamp, timestamp) end)
+    |> Enum.map(fn action -> Map.put(action, :timestamp, timestamp()) end)
   end
 
   # private methods

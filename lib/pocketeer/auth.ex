@@ -24,7 +24,7 @@ defmodule Pocketeer.Auth do
   """
   @spec authorize_url(String.t, String.t) :: String.t
   def authorize_url(request_token, redirect_uri) do
-    "#{authorize_url}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
+    "#{authorize_url()}?request_token=#{request_token}&redirect_uri=#{URI.encode_www_form(redirect_uri)}"
   end
 
   @doc """
@@ -63,7 +63,7 @@ defmodule Pocketeer.Auth do
   @spec get_request_token(String.t, String.t) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get_request_token(consumer_key, redirect_uri) do
     body = ~s({"consumer_key": "#{consumer_key}", "redirect_uri": "#{redirect_uri}"})
-    HTTPotion.post(request_token_url, [body: body, headers: request_headers])
+    HTTPotion.post(request_token_url(), [body: body, headers: request_headers()])
     |> handle_response
   end
 
@@ -105,7 +105,7 @@ defmodule Pocketeer.Auth do
   @spec get_access_token(String.t, String.t) :: {:ok, Response.t} | {:error, HTTPError.t}
   def get_access_token(consumer_key, request_token) do
     body = ~s({"consumer_key": "#{consumer_key}", "code": "#{request_token}"})
-    HTTPotion.post(access_token_url, [body: body, headers: request_headers])
+    HTTPotion.post(access_token_url(), [body: body, headers: request_headers()])
     |> handle_response
   end
 
@@ -129,15 +129,15 @@ defmodule Pocketeer.Auth do
   end
 
   defp authorize_url do
-    "#{pocket_url}/auth/authorize"
+    "#{pocket_url()}/auth/authorize"
   end
 
   defp access_token_url do
-    "#{pocket_url}/v3/oauth/authorize"
+    "#{pocket_url()}/v3/oauth/authorize"
   end
 
   defp request_token_url do
-    "#{pocket_url}/v3/oauth/request"
+    "#{pocket_url()}/v3/oauth/request"
   end
 
   defp pocket_url do

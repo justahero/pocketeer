@@ -1,7 +1,7 @@
 defmodule Pocketeer.Mixfile do
   use Mix.Project
 
-  @version "0.1.4"
+  @version "0.1.5"
   @project_url "https://www.github.com/justahero/pocketeer"
 
   def project do
@@ -9,9 +9,9 @@ defmodule Pocketeer.Mixfile do
       name: "Pocketeer",
       version: @version,
       elixir: "~> 1.2",
-      description: description,
-      deps: deps,
-      package: package,
+      description: description(),
+      deps: deps(),
+      package: package(),
       source_url: @project_url,
       homepage_url: @project_url,
       elixirc_paths: elixirc_paths(Mix.env),

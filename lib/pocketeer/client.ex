@@ -51,7 +51,7 @@ defmodule Pocketeer.Client do
     %__MODULE__ {
       consumer_key: Map.fetch!(options, :consumer_key),
       access_token: Map.fetch!(options, :access_token),
-      site: Map.get(options, :site, pocket_url)
+      site: Map.get(options, :site, pocket_url())
     }
   end
 
