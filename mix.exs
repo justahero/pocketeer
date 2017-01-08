@@ -1,7 +1,7 @@
 defmodule Pocketeer.Mixfile do
   use Mix.Project
 
-  @version "0.1.4"
+  @version "0.1.5"
   @project_url "https://www.github.com/justahero/pocketeer"
 
   def project do
