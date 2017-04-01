@@ -11,20 +11,18 @@ If you want to picture how Pocketeer might look, [Pixar's character](http://pixa
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
   1. Add pocketeer to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:pocketeer, "~> 0.1.5"}]
-    end
-    ```
+  ```elixir
+  def deps do
+    [{:pocketeer, "~> 0.1.5"}]
+  end
+  ```
 
   2. Ensure pocketeer is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:pocketeer]]
-    end
-    ```
+  ```elixir
+  def application do
+    [applications: [:pocketeer]]
+  end
+  ```
 
 ## Authentication
 
@@ -37,30 +35,27 @@ Your application should offer a page where users are redirected to after confirm
 The following steps show how to use the consumer key to get an access token.
 
   1. Fetch `request_token` from Pocket.
-
-    ```elixir
-    {:ok, body} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
-    #=> {:ok, %{"code" => "abcd", "state" => nil}}
-    request_token = body["code"]
-    #=> "abcd"
-    ```
+  ```elixir
+  {:ok, body} = Pocketeer.Auth.get_request_token(consumer_key, "http://yoursite.com")
+  #=> {:ok, %{"code" => "abcd", "state" => nil}}
+  request_token = body["code"]
+  #=> "abcd"
+  ```
 
   2. With this token, redirect the user to the authorization page of your application.
-
-    ```elixir
-    # a helper function can be used to construct the url.
-    Pocketeer.Auth.authorize_url("abcd", "http://yoursite.com")
-    #=> "https://getpocket.com/v3/oauth/authorize?request_token=abcd&redirect_uri=http%3A%2F%2Fyoursite.com"
-    ```
+  ```elixir
+  # a helper function can be used to construct the url.
+  Pocketeer.Auth.authorize_url("abcd", "http://yoursite.com")
+  #=> "https://getpocket.com/v3/oauth/authorize?request_token=abcd&redirect_uri=http%3A%2F%2Fyoursite.com"
+  ```
 
   3. Get an `access_token` after the user accepts the authorization.
-
-    ```elixir
-    {:ok, body} = Pocketeer.Auth.get_access_token(consumer_key, request_token)
-    #=> {:ok, %{"access_token" => "efgh", "username" => "pocketuser"}}
-    access_token = body["access_token"]
-    #=> "egfh"
-    ```
+  ```elixir
+  {:ok, body} = Pocketeer.Auth.get_access_token(consumer_key, request_token)
+  #=> {:ok, %{"access_token" => "efgh", "username" => "pocketuser"}}
+  access_token = body["access_token"]
+  #=> "egfh"
+  ```
 
 For more detailed handling of the request above:
 
